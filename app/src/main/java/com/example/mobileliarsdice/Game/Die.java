@@ -1,4 +1,4 @@
-package com.example.mobileliarsdice.Game;
+package game;
 
 /**
  * Created by Sung Won Caleb Bhyun
@@ -7,7 +7,7 @@ package com.example.mobileliarsdice.Game;
 public class Die {
     // Attributes
     private int face;
-
+    
     // Constructor
     public Die(int face) {
         this.face = face;

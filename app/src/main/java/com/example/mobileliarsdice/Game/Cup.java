@@ -1,4 +1,4 @@
-package com.example.mobileliarsdice.Game;
+package game;
 
 /**
  * Created by Sung Won Caleb Bhyun
@@ -7,7 +7,7 @@ package com.example.mobileliarsdice.Game;
 import java.util.ArrayList;
 
 public class Cup {
-    // Attribute
+    // Attributes
     private ArrayList<Die> cup;
 
     // Constructor: put five dice in a cup
@@ -21,6 +21,11 @@ public class Cup {
 
     public ArrayList<Die> getCup() {
         return cup;
+    }
+    
+    public PokerDiceHand getHand() {
+    	PokerDiceHand hand = new PokerDiceHand(cup.get(0), cup.get(1), cup.get(2), cup.get(3), cup.get(4));
+    	return hand;
     }
 
     // Roll n number of dice inside the cup
@@ -42,13 +47,11 @@ public class Cup {
         }
     }
 
-    // Roll all five dice inside the cup
+    // Roll all dice inside the cup
     public void shake() {
-        cup.get(0).roll();
-        cup.get(1).roll();
-        cup.get(2).roll();
-        cup.get(3).roll();
-        cup.get(4).roll();
+    	for (int i = 0; i < cup.size(); i++) {
+    		cup.get(i).roll();
+        }
     }
 
     // Take out a die from the cup

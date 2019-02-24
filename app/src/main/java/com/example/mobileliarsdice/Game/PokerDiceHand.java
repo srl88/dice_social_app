@@ -1,4 +1,4 @@
-package com.example.mobileliarsdice.Game;
+package game;
 
 import java.util.ArrayList;
 
@@ -22,9 +22,22 @@ public class PokerDiceHand {
         fiveDice.add(cup.getCup().get(2));
         fiveDice.add(cup.getCup().get(3));
         fiveDice.add(cup.getCup().get(4));
+        getHand();
+    }
+    
+    // Constructor
+    public PokerDiceHand(Die first, Die second, Die third, Die fourth, Die fifth) {
+        fiveDice = new ArrayList<Die>();
+        fiveDice.add(first);
+        fiveDice.add(second);
+        fiveDice.add(third);
+        fiveDice.add(fourth);
+        fiveDice.add(fifth);
+        getHand();
     }
 
     public String getHand() {
+    	orderByFace();
         if (isFiveOfAKind() == true) {
             hand = "Five of a kind";
             rank = 1;
@@ -161,6 +174,8 @@ public class PokerDiceHand {
     public boolean isTwoPair() {
         if ((orderedDice.get(0).getFace() == orderedDice.get(1).getFace()
                 && orderedDice.get(2).getFace() == orderedDice.get(3).getFace())
+                ||(orderedDice.get(0).getFace() == orderedDice.get(1).getFace()
+                && orderedDice.get(3).getFace() == orderedDice.get(4).getFace())
                 ||(orderedDice.get(1).getFace() == orderedDice.get(2).getFace()
                 && orderedDice.get(3).getFace() == orderedDice.get(4).getFace())) {
             return true;

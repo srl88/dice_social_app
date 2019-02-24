@@ -1,4 +1,4 @@
-package com.example.mobileliarsdice.Game;
+package game;
 
 /**
  * Created by Sung Won Caleb Bhyun
@@ -14,6 +14,10 @@ public class Player {
         this.name = name;
         this.token = token;
     }
+    
+    public String getName() {
+        return name;
+    }
 
     public int getToken() {
         return token;
@@ -22,4 +26,10 @@ public class Player {
     public void setToken(int token) {
         this.token = token;
     }
+    
+    public String toString() {
+        return "name: " + name + ", token: " + Integer.toString(token);
+    }
+    
+    
 }
