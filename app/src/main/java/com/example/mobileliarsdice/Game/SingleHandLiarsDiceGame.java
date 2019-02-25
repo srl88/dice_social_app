@@ -1,4 +1,4 @@
-package game;
+package com.example.mobileliarsdice.Game;
 
 import java.util.ArrayList;
 
