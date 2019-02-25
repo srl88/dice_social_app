@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "77601377034",
+    "firebase_url": "https://liardice-32c02.firebaseio.com",
+    "project_id": "liardice-32c02",
+    "storage_bucket": "liardice-32c02.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:77601377034:android:d7fdb93eae846026",
+        "android_client_info": {
+          "package_name": "com.example.mobileliarsdice"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "77601377034-f0lig3udrhutk330cdrb14cu0mmb0fbg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mobileliarsdice",
+            "certificate_hash": "483954e6d1f9d65d2b26c62c7c885af831feb283"
+          }
+        },
+        {
+          "client_id": "77601377034-kq4htrsio71v2jn50af3bcdjjf12qbr6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJe2JRffhqZ_rWnROESplQ8oVjSSvVvtY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "77601377034-kq4htrsio71v2jn50af3bcdjjf12qbr6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
