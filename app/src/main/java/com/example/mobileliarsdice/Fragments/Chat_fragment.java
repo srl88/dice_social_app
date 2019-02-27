@@ -1,6 +1,5 @@
-package com.example.mobileliarsdice;
+package com.example.mobileliarsdice.Fragments;
 
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -10,7 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.mobileliarsdice.Adapters.ChatAdapter;
+import com.example.mobileliarsdice.FireBaseGlobals;
+import com.example.mobileliarsdice.Main;
 import com.example.mobileliarsdice.Models.Chats;
+import com.example.mobileliarsdice.R;
+import com.example.mobileliarsdice.UserGlobals;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,17 +23,20 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Message_fragment extends Fragment {
+public class Chat_fragment extends Fragment {
 
     private RecyclerView recycleView;
     private ChatAdapter chatAdapter;
 
     private List<Chats> mChats;
 
+    DatabaseReference refUser;
+    ValueEventListener refChats;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.messages, container, false);
+        View rootView = inflater.inflate(R.layout.chat, container, false);
 
         //set the view
         recycleView = rootView.findViewById(R.id.recycleView);
@@ -46,15 +53,15 @@ public class Message_fragment extends Fragment {
 
     private void getAllChats(){
         String _id = FireBaseGlobals.getUser().getUid();
-        DatabaseReference refUser = FireBaseGlobals.getDataBase().getReference("CHATS").child(_id);
+        refUser = FireBaseGlobals.getDataBase().getReference("CHATS").child(_id);
         //ANY CHANGES ON THE USER_DATABASE WILL BE REFLECTED ON THE USER OBJECT
-        refUser.addValueEventListener(new ValueEventListener() {
+        refChats = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mChats.clear();
                 for(DataSnapshot c: dataSnapshot.getChildren()) {
                     Chats temp = c.getValue(Chats.class);
-                    if (Main.mUser != null && temp != null) {
+                    if (UserGlobals.mUser != null && temp != null) {
                         mChats.add(temp);
                     }
                 }
@@ -65,6 +72,14 @@ public class Message_fragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // TODO:read documentation to see the type of error
             }
-        });
+        };
+        refUser.addValueEventListener(refChats);
+    }
+
+    //remove event listeners
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        refUser.removeEventListener(refChats);
     }
 }
