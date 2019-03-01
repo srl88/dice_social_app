@@ -1,13 +1,16 @@
 package com.example.mobileliarsdice;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -16,13 +19,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.example.mobileliarsdice.Models.Users;
-import com.example.mobileliarsdice.Models.Utilities;
 import com.google.firebase.auth.FirebaseAuth;
-
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -34,7 +32,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
-public class loginActivity extends AppCompatActivity {
+public class loginActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback{
 
     Boolean isSignIn = true;
 
@@ -45,6 +43,9 @@ public class loginActivity extends AppCompatActivity {
     EditText password;
     EditText userName;
     ProgressDialog pd;
+
+    final static int LOCATION_PERMISSION = 100;
+
 
     //TODO: FIX THE DIALOG PROGRESS
     @Override
@@ -62,7 +63,6 @@ public class loginActivity extends AppCompatActivity {
 
         pd = new ProgressDialog(loginActivity.this, R.color.colorPrimary);
         pd.setIndeterminate(true);
-        pd.setMessage("Authenticating...");
 
         //GETS RID OF THE TOP BAR
         try {
@@ -71,39 +71,35 @@ public class loginActivity extends AppCompatActivity {
         }
 
 
-        //Check if there is connectivity!
-        if (isNetworkConnected()) {
-            //we check for credentials here... email/password
-            if (Utilities.areCredentialsAvailable(loginActivity.this)) {
-                // sign in
-                String emailText = Utilities.getEmail(loginActivity.this);
-                String passwordText = Utilities.getPassword(loginActivity.this);
-                signIn(emailText, passwordText);
-            }
-        } else {
-            //No internet... go to single mode...
-            //TODO: MAKE SINGLE MODE PLAYER
-
-        }
+        //Create event listeners!
         // event listeners
+
+        /**
+         * EVENTLISTENERS BLOCK
+         */
         signUpOrIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //signin Mode
-                String userText = userName.getText().toString();
-                String emailText = email.getText().toString();
-                String passwordText = password.getText().toString();
-                if (isSignIn) {
-                    //validate input
-                    if (validateEmailAndPassword(emailText, passwordText)) {
-                        signIn(emailText, passwordText);
+                Boolean isLocation = checkLocationPermission();
+                if(isLocation){
+                    String userText = userName.getText().toString();
+                    String emailText = email.getText().toString();
+                    String passwordText = password.getText().toString();
+                    if (isSignIn) {
+                        //validate input
+                        if (validateEmailAndPassword(emailText, passwordText)) {
+                            signIn(emailText, passwordText);
+                        }
                     }
-                }
-                //signup mode
-                else {
-                    if (validateAll(userText, emailText, passwordText)) {
-                        signUp(userText, emailText, passwordText);
+                    //signup mode
+                    else {
+                        if (validateAll(userText, emailText, passwordText)) {
+                            signUp(userText, emailText, passwordText);
+                        }
                     }
+                }else{
+                    //THE PERMISSIONS BLOCK TAKES CARE OF THIS!
                 }
             }
         });
@@ -111,22 +107,76 @@ public class loginActivity extends AppCompatActivity {
         link.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isSignIn) {
-                    link.setText(R.string.signUp2);
-                    forgot.setVisibility(View.INVISIBLE);
-                    userName.setVisibility(View.VISIBLE);
-                    signUpOrIn.setText(R.string.signUp);
-                } else {
-                    link.setText(R.string.signIn2);
-                    forgot.setVisibility(View.VISIBLE);
-                    userName.setVisibility(View.INVISIBLE);
-                    signUpOrIn.setText(R.string.signIn);
+                Boolean isLocation = checkLocationPermission();
+                if(isLocation){
+                    if (isSignIn) {
+                        link.setText(R.string.signUp2);
+                        forgot.setVisibility(View.INVISIBLE);
+                        userName.setVisibility(View.VISIBLE);
+                        signUpOrIn.setText(R.string.signUp);
+                    } else {
+                        link.setText(R.string.signIn2);
+                        forgot.setVisibility(View.VISIBLE);
+                        userName.setVisibility(View.INVISIBLE);
+                        signUpOrIn.setText(R.string.signIn);
+                    }
+                    isSignIn = !isSignIn;
                 }
-                isSignIn = !isSignIn;
+                else{
+                    //THE PERMISSIONS BLOCK TAKES CARE OF THIS!
+                }
             }
         });
 
+
         //TODO: MAKE FORGOT PASSWORD EMAIL
+
+        /**
+         * DONE EVENTLISTENERS BLOCK
+         */
+
+
+        /**
+         * AUTOLOGIN BLOCK
+         * Autologin... connection and location are always required
+         */
+        Boolean isConnection = isNetworkConnected();
+        Boolean isLocation = checkLocationPermission();
+        if(isLocation){
+            if(isConnection){
+                Boolean isUserConnected =  isUserConnected();
+                if(isUserConnected){
+                        pd.setMessage("Updating your location...");
+                        pd.show();
+                        // goes automatically to main!
+                        Location currentLocation = getCurrentLocation();
+                        if(currentLocation!=null){
+                            updateCurrentUser(currentLocation.getLongitude(), currentLocation.getLatitude());
+                        }else{
+                            pd.dismiss();
+                            Utilities.createToast("THE APPLICATION COULD NOT RETRIEVE YOUR LOCATION", loginActivity.this);
+                        }
+                }
+                else{
+                    Boolean areCredentialsStored = Utilities.areCredentialsAvailable(loginActivity.this);
+                    if(areCredentialsStored){
+                        String storedEmail = Utilities.getEmail(loginActivity.this);
+                        String storedPassword = Utilities.getPassword(loginActivity.this);
+                        signIn(storedEmail, storedPassword);
+                    }
+                }
+            }
+            else{
+                //network is not connected! Go to single mode after informing the user!
+                //TODO: INFORM USER AND GO TO SINGLE MODE
+            }
+        }else{
+            //There is no permission! This is taken care by the permission manager.
+        }
+
+        /**
+         * DONE AUTOLOGIN BLOCK
+         */
 
     }
 
@@ -147,6 +197,25 @@ public class loginActivity extends AppCompatActivity {
         }
         return false;
     }
+
+    /**
+     * Checks if the user is already login
+     * @return
+     */
+    private boolean isUserConnected(){
+        return FireBaseGlobals.getUser()!=null;
+    }
+
+    /**
+     *  Goes to Main!
+     */
+    private void goToMain(){
+        Intent i = new Intent(loginActivity.this, Main.class);
+        startActivity(i);
+        pd.dismiss();
+        this.finish();
+    }
+
 
     /**
      * Validates email and password based on firebase rules.
@@ -192,7 +261,10 @@ public class loginActivity extends AppCompatActivity {
      * @param password
      */
     private void signIn(final String email, final String password) {
+        pd.setMessage("Authenticating...");
         pd.show();
+        //update credentials in case the password was changed!
+        Utilities.putCredentials(loginActivity.this, email, password);
         FirebaseAuth mAuth = FireBaseGlobals.getAuth();
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(loginActivity.this, new OnCompleteListener<AuthResult>() {
@@ -201,22 +273,19 @@ public class loginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // update location
                             pd.setMessage("Accessing your location...");
-                            Location location = Utilities.getCurrentLocation(loginActivity.this);
-
-                            if (location != null) {
+                            Location currentLocation = getCurrentLocation();
+                            if (currentLocation != null) {
                                 //update database
-                                pd.setMessage("Updating your profile location...");
-                                Utilities.putCredentials(loginActivity.this, email, password);
-                                updateCurrentUser(location.getLongitude(), location.getLatitude());
+                                updateCurrentUser(currentLocation.getLongitude(), currentLocation.getLatitude());
 
                             } else {
                                 pd.dismiss();
-                                Utilities.createToast("APPLICATION CANNOT ACCESS THE GPS. PLEASE UPDATE IN DEVICE SETTINGS!", loginActivity.this);
+                                Utilities.createToast("THE APPLICATION COULD NOT RETRIEVE YOUR LOCATION", loginActivity.this);
                             }
                         } else {
                             //error
                             pd.dismiss();
-                            Utilities.createToast("Authentication Error.", loginActivity.this);
+                            Utilities.createToast("Authentication Error. Make sure your password and email are correct", loginActivity.this);
 
                         }
 
@@ -231,7 +300,8 @@ public class loginActivity extends AppCompatActivity {
 
     //Updates location and online.
     private void updateCurrentUser(final Double longitude, final Double latitude) {
-        String _id = FireBaseGlobals.getUser().getUid();
+        pd.setMessage("Updating your profile location...");
+        final String _id = FireBaseGlobals.getUser().getUid();
         DatabaseReference refUser = FireBaseGlobals.getDataBase().getReference("USERS/").child(_id);
         HashMap<String, Object> newValues = new HashMap<>();
         newValues.put("longitude", longitude);
@@ -240,11 +310,25 @@ public class loginActivity extends AppCompatActivity {
         refUser.updateChildren(newValues, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                pd.dismiss();
                 if(databaseError==null){
-                    Intent i = new Intent(loginActivity.this, Main.class);
-                    startActivity(i);
+
+                    DatabaseReference userRef = FireBaseGlobals.getDataBase().getReference("USERS").child(_id);
+                    userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            pd.setMessage("Retrieving your profile information...");
+                            UserGlobals.mUser = dataSnapshot.getValue(Users.class);
+                            goToMain();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            pd.dismiss();
+                        }
+                    });
+
                 }else{
+                    pd.dismiss();
                     Utilities.createToast("Error while updating your profile... Try again!", loginActivity.this);
                 }
             }
@@ -261,7 +345,6 @@ public class loginActivity extends AppCompatActivity {
      */
     private void signUp(final String userName, final String email, final String password) {
         // create account
-        pd.show();
         FirebaseAuth mAuth = FireBaseGlobals.getAuth();
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
@@ -269,30 +352,29 @@ public class loginActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     //get location and create user
                     pd.setMessage("Accessing your location...");
-                    Location location = Utilities.getCurrentLocation(loginActivity.this);
-                    if (location != null) {
+                    Location currentLocation = getCurrentLocation();
+                    if (currentLocation != null) {
                         String userId = FireBaseGlobals.getUser().getUid();
-                        DatabaseReference reference = FireBaseGlobals.getDataBase().getReference("Users").child(userId);
-                        Users newUser = new Users(userName, "NONE", userId, location.getLongitude(), location.getLatitude(), true, 0);
+                        DatabaseReference reference = FireBaseGlobals.getDataBase().getReference("USERS").child(userId);
+                        final Users newUser = new Users(userName, "NONE", userId, currentLocation.getLongitude(), currentLocation.getLatitude(), true, 0, 50);
                         pd.setMessage("Creating profile...");
                         reference.setValue(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                pd.dismiss();
                                 if (task.isSuccessful()) {
                                     //save credentials
                                     Utilities.putCredentials(loginActivity.this, email, password);
-                                    Intent i = new Intent(loginActivity.this, Main.class);
-                                    startActivity(i);
+                                    UserGlobals.mUser = newUser;
+                                    goToMain();
                                 } else {
-                                    Utilities.createToast("Error while creating your account... Try to sign in!", loginActivity.this);
+                                    Utilities.createToast("Error while creating your account... Try again!", loginActivity.this);
                                 }
                             }
                         });
 
                     } else {
                         pd.dismiss();
-                        Utilities.createToast("APPLICATION CANNOT ACCESS THE GPS. PLEASE UPDATE IN SETTINGS!", loginActivity.this);
+                        Utilities.createToast("APPLICATION CANNOT ACCESS THE LOCATION. PLEASE UPDATE IN SETTINGS!", loginActivity.this);
                     }
                 }else {
                     pd.dismiss();
@@ -305,6 +387,73 @@ public class loginActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    /**********************************************************
+     * METHODS FOR LOCATION REQUESTING THE PERMISSIONS         *
+     **********************************************************/
+
+    /**
+     * checks if we have permission to use the location. If we don't we ask the user
+     * @return true if so... otherwise false.
+     */
+    public boolean checkLocationPermission(){
+        if (ActivityCompat.checkSelfPermission(FireBaseGlobals.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED ) {
+            try {
+                ActivityCompat.requestPermissions(loginActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION);
+            }catch (Exception e) {
+                System.out.print(e);
+            }
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
+    /**
+     * Same as above but returns the location
+     * @return
+     */
+    public Location getCurrentLocation(){
+        //This is always required!
+        if (ActivityCompat.checkSelfPermission(FireBaseGlobals.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED ){
+            LocationManager locationManager = (LocationManager) FireBaseGlobals.getContext().getSystemService(Context.LOCATION_SERVICE);
+            return locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+
+        }
+        return null;
+    }
+
+    /**
+     * This is the call back from the previous method!
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        //error checking
+        if(grantResults.length>0){
+            //if permission was granted!
+            if(grantResults[0]==PackageManager.PERMISSION_GRANTED){
+                //Permission was granted!
+                Utilities.createToast("Please try to login again!", loginActivity.this);
+                //If the user has clicked on the never show again button
+            }else if(!shouldShowRequestPermissionRationale(permissions[0])){
+                try {
+                    Utilities.createToast("In order to play with other players we required  your location, please update your settings.", loginActivity.this);
+                    Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(i);
+                } catch (Exception e) {
+                    Utilities.createToast("The application could not redirect you to the settings menu. Please do it manually.", loginActivity.this);
+                }
+            }
+        }
     }
 }
 

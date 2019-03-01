@@ -1,20 +1,11 @@
 package com.example.mobileliarsdice;
-
-import android.Manifest;
-import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
 
 
 /**
@@ -25,10 +16,10 @@ public class FireBaseGlobals extends Application {
 
     //Creation at before the app gets launched...
     private static Context appContext;
-    private static FirebaseAuth mAuth;
+    private static FirebaseAuth mAuth = null;
     private static FirebaseApp fApp;
     private static FirebaseDatabase fDataBase;
-
+    private static FirebaseStorage fStorage;
 
     /**
      * This is the application context! Singleton pattern!
@@ -40,6 +31,7 @@ public class FireBaseGlobals extends Application {
         //fApp is no longer needed.
         fApp = FirebaseApp.initializeApp(appContext);
         fDataBase = FirebaseDatabase.getInstance();
+        fStorage = FirebaseStorage.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
     }
@@ -58,7 +50,12 @@ public class FireBaseGlobals extends Application {
      * @return
      */
     public static FirebaseUser getUser() {
+        if(mAuth==null) return null;
+        else if(mAuth.getCurrentUser() == null){
+            return null;
+        }
         return mAuth.getCurrentUser();
+
     }
 
     /**
@@ -74,4 +71,17 @@ public class FireBaseGlobals extends Application {
      * @return
      */
     public static Context getContext(){return appContext;}
+
+    /**
+     * Returns the instance of the firebaseStorage
+     * @return
+     */
+    public static FirebaseStorage getFirebaseStorage(){return fStorage;}
+
+    /**
+     * Logout!
+     */
+    public static void logOut(){
+        mAuth.signOut();
+    }
 }

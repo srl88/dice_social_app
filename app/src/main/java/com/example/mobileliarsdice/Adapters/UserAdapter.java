@@ -1,4 +1,4 @@
-package com.example.mobileliarsdice;
+package com.example.mobileliarsdice.Adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,19 +9,22 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.mobileliarsdice.Models.Chats;
-import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
-public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
+import com.example.mobileliarsdice.Models.Users;
+import com.example.mobileliarsdice.R;
+import com.squareup.picasso.Picasso;
 
+/**
+ *
+ */
+public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     private Context mContext;
-    private List<Chats> chats;
+    private List<Users>  users;
 
-    public ChatAdapter(Context c, List<Chats> ch){
+    public UserAdapter(Context c, List<Users> u){
         this.mContext = c;
-        this.chats = ch;
+        this.users = u;
     }
 
     /**
@@ -32,11 +35,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
      */
     @NonNull
     @Override
-    public ChatAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(mContext).inflate(R.layout.user_item, viewGroup, false);
-        return new ChatAdapter.ViewHolder(v);
+        return new UserAdapter.ViewHolder(v);
     }
-
 
     /**
      *
@@ -44,36 +46,25 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
      * @param i
      */
     @Override
-    public void onBindViewHolder(@NonNull ChatAdapter.ViewHolder viewHolder, int i) {
-        Chats u = chats.get(i);
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+        Users u = users.get(i);
         viewHolder._USER_NAME.setText(u.getUserName());
-
-        //set image
         if(u.getUrl().equals("NONE")){
             viewHolder._USER_IMAGE.setImageResource(R.mipmap.app_foreground);
         }else{
             Picasso.get().load(u.getUrl()).into(viewHolder._USER_IMAGE);
         }
-        //set new message
-        if(u.getNewChat()){
-            //viewHolder._USER_IMAGE.
-            viewHolder._NEW_MESSAGE.setVisibility(View.VISIBLE);
-        }
-        else{
-            viewHolder._NEW_MESSAGE.setVisibility(View.INVISIBLE);
-        }
     }
 
     @Override
     public int getItemCount() {
-        return chats.size();
+        return users.size();
     }
 
     /**
      *
      */
     public class ViewHolder extends  RecyclerView.ViewHolder{
-        public TextView _NEW_MESSAGE;
         public TextView _USER_NAME;
         public ImageView _USER_IMAGE;
 
@@ -81,7 +72,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
             super(v);
             _USER_NAME = itemView.findViewById(R.id.name_profile);
             _USER_IMAGE = itemView.findViewById(R.id.image_profile);
-            _NEW_MESSAGE = itemView.findViewById(R.id.lblNew);
         }
     }
 }

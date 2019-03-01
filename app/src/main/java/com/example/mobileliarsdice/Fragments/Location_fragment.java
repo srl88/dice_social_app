@@ -1,4 +1,4 @@
-package com.example.mobileliarsdice;
+package com.example.mobileliarsdice.Fragments;
 
 import android.location.Location;
 import android.os.Bundle;
@@ -10,8 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.mobileliarsdice.Models.UserInfo;
+import com.example.mobileliarsdice.Adapters.UserAdapter;
+import com.example.mobileliarsdice.FireBaseGlobals;
+import com.example.mobileliarsdice.Main;
 import com.example.mobileliarsdice.Models.Users;
+import com.example.mobileliarsdice.R;
+import com.example.mobileliarsdice.UserGlobals;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,7 +23,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.PriorityQueue;
 
 public class Location_fragment extends Fragment {
 
@@ -31,7 +34,9 @@ public class Location_fragment extends Fragment {
 
     //store all the online users
     private List<Users> allUsers;
-    //public Locations mLocation = null;
+
+    DatabaseReference refUser;
+    ValueEventListener refLoc;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,23 +57,23 @@ public class Location_fragment extends Fragment {
 
 
     private void updateLocationView(){
-        DatabaseReference refUser = FireBaseGlobals.getDataBase().getReference("USERS");
+        refUser = FireBaseGlobals.getDataBase().getReference("USERS");
         //ANY CHANGES ON THE USER_DATABASE WILL BE REFLECTED ON THE USER OBJECT
-        refUser.addValueEventListener(new ValueEventListener() {
+        refLoc = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 ranking.clear();
                 allUsers.clear();
                 for(DataSnapshot c: dataSnapshot.getChildren()){
                     Users temp = c.getValue(Users.class);
-                    if(Main.mUser!=null && temp!=null){
-                        if(!Main.mUser.getId().equals(temp.getId())&&temp.getOnline()){
+                    if(UserGlobals.mUser!=null && temp!=null){
+                        if(!UserGlobals.mUser.getId().equals(temp.getId())&&temp.getOnline()){
                             //check location!
                             float[] results = new float[3];
-                            Location.distanceBetween(Main.mUser.getLatitude(), Main.mUser.getLongitude(),
+                            Location.distanceBetween(UserGlobals.mUser.getLatitude(), UserGlobals.mUser.getLongitude(),
                                     temp.getLatitude(), temp.getLongitude(), results);
-                            // if less than 100 km add it!
-                            if(results[0]<=100000){
+                            // make sure that the distances agree!
+                            if(results[0]<=UserGlobals.mUser.getDistance()&&results[0]<=temp.getDistance()){
                                 allUsers.add(temp);
                             }
                         }
@@ -85,7 +90,16 @@ public class Location_fragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // TODO:read documentation to see the type of error
             }
-        });
+        };
+
+        refUser.addValueEventListener(refLoc);
+    }
+
+    //remove event listeners
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        refUser.removeEventListener(refLoc);
     }
 
 }

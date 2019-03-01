@@ -1,15 +1,9 @@
-package com.example.mobileliarsdice.Models;
-
-import android.Manifest;
+package com.example.mobileliarsdice;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
-import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
-import com.example.mobileliarsdice.FireBaseGlobals;
+
 
 /**
  * Static Utility class
@@ -19,7 +13,6 @@ public class Utilities {
     /****************************
      * METHODS FOR CREDENTIALS  *
      ****************************/
-    //TODO: MOVE THIS methods TO A UTILITY CLASS
 
     /**
      * Checks if there are credentials saved in the phone
@@ -63,26 +56,11 @@ public class Utilities {
         info.edit().putString("password", password).apply();
     }
 
-    /**********************************************************
-     * METHODS FOR LOCATION AND CAMERA WITH THEIR PERMISSIONS *
-     **********************************************************/
-    //TODO: ONLY LOCATION IMPLEMENTED... WE SHOULD MOVE THE CAMERA IN SETTINGS...
-    public static Location getCurrentLocation(Activity activity) {
-        //Check for permissions
-        if (ActivityCompat.checkSelfPermission(FireBaseGlobals.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED ) {
-            try{
-                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
-            }catch (Exception e){
-                System.out.print(e);
-            }
-            return null;
-        }
-        LocationManager locationManager = (LocationManager) FireBaseGlobals.getContext().getSystemService(Context.LOCATION_SERVICE);
-        return locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+    public static void deleteCredentials(Context c){
+        SharedPreferences info = c.getSharedPreferences("userDetails", Context.MODE_PRIVATE);
+        info.edit().remove("email").commit();
+        info.edit().remove("password").commit();
     }
-
-
 
     /**
      * Displays a toast message. This could be moved to a utility class...
@@ -93,10 +71,13 @@ public class Utilities {
     }
 
     /**
-     * Generates a key for messages based on two users
+     * Generates a key for chat based on two users
      */
-    public static int createMessageKey(String str1, String str2){
-        return str1.compareTo(str2);
+    public static String createMessageKey(String str1, String str2) {
+        if (str1.compareTo(str2) > 0) {
+            return str1 + str2;
+        } else {
+            return str2 + str1;
+        }
     }
-
 }
