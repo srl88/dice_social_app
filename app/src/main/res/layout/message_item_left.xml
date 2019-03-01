@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true">
+
+        <TextView
+            android:id="@+id/text_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HELLO"
+            android:padding="10dp"
+            android:layout_toLeftOf="@id/profile_picture"
+            android:textColor="@color/common_google_signin_btn_text_dark_focused"
+            android:background="@drawable/message_right_background"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_marginEnd="10dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:src="@mipmap/app_foreground"
+            android:id="@+id/profile_picture"/>
+
+    </RelativeLayout>
+</RelativeLayout>
