@@ -27,4 +27,7 @@
     <string name="delete_text">Please enter your credentials to delete your accunt</string>
     <string name="cancel">CANCEL</string>
     <string name="delete">DELETE</string>
+    <string name="title_activity_game">gameActivity</string>
+    <string name="ready_button_clicked">CANCEL</string>
+    <string name="ready_button_not_clicked">READY</string>
 </resources>
