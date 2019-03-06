@@ -59,15 +59,20 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public void onBindViewHolder(@NonNull MessageAdapter.ViewHolder viewHolder, int i) {
         Messages m = msg.get(i);
 
-        viewHolder._TEXT.setText(m.getText());
+        if(m.getImageUrl().isEmpty()){
+            viewHolder._TEXT.setText(m.getText());
+            viewHolder._MESSAGE_IMAGE.setVisibility(View.GONE);
+        }
+        else{
+            viewHolder._TEXT.setVisibility(View.GONE);
+            Picasso.get().load(m.getImageUrl()).into(viewHolder._MESSAGE_IMAGE);
+        }
 
         if(m.getSender_id().equals(UserGlobals.mUser.getId())){
             setImage(mImage, viewHolder);
         }else{
             setImage(fImage, viewHolder);
         }
-
-
     }
 
     private void setImage(String url, @NonNull MessageAdapter.ViewHolder viewHolder){
@@ -90,11 +95,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView _TEXT;
         public ImageView _USER_IMAGE;
+        public ImageView _MESSAGE_IMAGE;
 
         public ViewHolder(View v) {
             super(v);
             _TEXT = itemView.findViewById(R.id.text_msg);
             _USER_IMAGE = itemView.findViewById(R.id.profile_picture);
+            _MESSAGE_IMAGE = itemView.findViewById(R.id.msg_image);
         }
     }
 

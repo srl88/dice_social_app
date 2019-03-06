@@ -276,7 +276,6 @@ public class Settings_fragment extends Fragment{
             getActivity().finish();
         }
         save.setEnabled(true);
-
     }
 
 
