@@ -1,10 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/appbar_padding_top"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-</android.support.constraint.ConstraintLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/rulesTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="60dp"
+                android:fontFamily="@font/bangers"
+                android:text="How To Play"
+                android:textAlignment="center"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                android:textSize="45sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+
+            <EditText
+                android:id="@+id/rulesDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="textMultiLine"
+                android:text="
+Before beginning to learn how to play, it's important to know a few basic terminologies
+involved with the game.These are some of the terms required to understand the basic flow
+of the game's conventions:
+
+Hand - The amount of dice involved in each round of play. A traditional hand is comprised of 5 dice.
+There are also several different kinds of hands that can be identified by the face values of each dice.
+
+
+Bet - A claim to the amount of dice and their face values made by a player during their turn.
+
+Challenge - When a player denies that another player's bet is true.
+
+The format of the game that Mobile Liar's Dice follows is Common Hand Liar's Dice. This means there
+is a single hand of dice in play during rounds and each player takes turns rolling the dice in the
+hand or betting on the number of dice with certain face values."
+                />
+        </LinearLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+
+</FrameLayout>
