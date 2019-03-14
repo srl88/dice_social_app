@@ -27,4 +27,5 @@
     <string name="delete_text">Please enter your credentials to delete your accunt</string>
     <string name="cancel">CANCEL</string>
     <string name="delete">DELETE</string>
+    <string name="roll">Roll</string>
 </resources>
