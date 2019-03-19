@@ -261,36 +261,33 @@ public class loginActivity extends AppCompatActivity implements ActivityCompat.O
      * @param password
      */
     private void signIn(final String email, final String password) {
-        pd.setMessage("Authenticating...");
-        pd.show();
         //update credentials in case the password was changed!
         Utilities.putCredentials(loginActivity.this, email, password);
-        FirebaseAuth mAuth = FireBaseGlobals.getAuth();
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(loginActivity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // update location
-                            pd.setMessage("Accessing your location...");
-                            Location currentLocation = getCurrentLocation();
-                            if (currentLocation != null) {
-                                //update database
+        // check location first
+        pd.setMessage("Accessing your location...");
+        pd.show();
+        final Location currentLocation = getCurrentLocation();
+        // if location available
+        if(currentLocation!=null){
+            pd.setMessage("Authenticating...");
+            FirebaseAuth mAuth = FireBaseGlobals.getAuth();
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(loginActivity.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // update location
+                                pd.setMessage("Accessing your location...");
                                 updateCurrentUser(currentLocation.getLongitude(), currentLocation.getLatitude());
 
-                            } else {
-                                pd.dismiss();
-                                Utilities.createToast("THE APPLICATION COULD NOT RETRIEVE YOUR LOCATION", loginActivity.this);
                             }
-                        } else {
-                            //error
-                            pd.dismiss();
-                            Utilities.createToast("Authentication Error. Make sure your password and email are correct", loginActivity.this);
-
                         }
+                    });
 
-                    }
-                });
+        }else{
+            pd.dismiss();
+            Utilities.createToast("THE APPLICATION COULD NOT RETRIEVE YOUR LOCATION", loginActivity.this);
+        }
     }
 
 
@@ -344,49 +341,53 @@ public class loginActivity extends AppCompatActivity implements ActivityCompat.O
      * @param password
      */
     private void signUp(final String userName, final String email, final String password) {
-        // create account
-        FirebaseAuth mAuth = FireBaseGlobals.getAuth();
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    //get location and create user
-                    pd.setMessage("Accessing your location...");
-                    Location currentLocation = getCurrentLocation();
-                    if (currentLocation != null) {
-                        String userId = FireBaseGlobals.getUser().getUid();
-                        DatabaseReference reference = FireBaseGlobals.getDataBase().getReference("USERS").child(userId);
-                        final Users newUser = new Users(userName, "NONE", userId, currentLocation.getLongitude(), currentLocation.getLatitude(), true, 0, 50);
-                        pd.setMessage("Creating profile...");
-                        reference.setValue(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    //save credentials
-                                    Utilities.putCredentials(loginActivity.this, email, password);
-                                    UserGlobals.mUser = newUser;
-                                    goToMain();
-                                } else {
-                                    Utilities.createToast("Error while creating your account... Try again!", loginActivity.this);
+
+        // get location first!
+        pd.setMessage("Accessing your location...");
+        final Location currentLocation = getCurrentLocation();
+        pd.show();
+        // if location available... create account
+        if(currentLocation!=null){
+            FirebaseAuth mAuth = FireBaseGlobals.getAuth();
+            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                            // account created... create profile!
+                            String userId = FireBaseGlobals.getUser().getUid();
+                            DatabaseReference reference = FireBaseGlobals.getDataBase().getReference("USERS").child(userId);
+                            final Users newUser = new Users(userName, "NONE", userId, currentLocation.getLongitude(), currentLocation.getLatitude(), true, 0, 50);
+                            pd.setMessage("Creating profile...");
+                            reference.setValue(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        //save credentials
+                                        Utilities.putCredentials(loginActivity.this, email, password);
+                                        UserGlobals.mUser = newUser;
+                                        goToMain();
+                                    } else {
+                                        Utilities.createToast("Error while creating your account... Try again!", loginActivity.this);
+                                    }
                                 }
-                            }
-                        });
+                            });
 
-                    } else {
+                    }else {
                         pd.dismiss();
-                        Utilities.createToast("APPLICATION CANNOT ACCESS THE LOCATION. PLEASE UPDATE IN SETTINGS!", loginActivity.this);
+                        if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                            Utilities.createToast("This email is already registered!. Maybe you forgot your password?", loginActivity.this);
+                        } else {
+                            Utilities.createToast("Authentication Error.", loginActivity.this);
+                        }
                     }
-                }else {
-                    pd.dismiss();
-                    if (task.getException() instanceof FirebaseAuthUserCollisionException) {
-                        Utilities.createToast("This email is already registered!. Maybe you forgot your password?", loginActivity.this);
-                    } else {
-                        Utilities.createToast("Authentication Error.", loginActivity.this);
-                    }
-                }
 
-            }
-        });
+                }
+            });
+        }
+        else {
+        pd.dismiss();
+        Utilities.createToast("APPLICATION CANNOT ACCESS THE LOCATION. PLEASE UPDATE IN SETTINGS!", loginActivity.this);
+    }
     }
 
     /**********************************************************

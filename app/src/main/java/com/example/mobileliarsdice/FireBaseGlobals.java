@@ -7,7 +7,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 
-
 /**
  * Class for firebase globals. This is a singleton pattern.
  * One object for the whole application.
@@ -33,7 +32,6 @@ public class FireBaseGlobals extends Application {
         fDataBase = FirebaseDatabase.getInstance();
         fStorage = FirebaseStorage.getInstance();
         mAuth = FirebaseAuth.getInstance();
-
     }
 
 

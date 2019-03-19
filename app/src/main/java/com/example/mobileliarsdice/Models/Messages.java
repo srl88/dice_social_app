@@ -6,15 +6,25 @@ public class Messages {
     String receiver_id;
     String receiver;
     String text;
+    String imageUrl;
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
     public Messages(){}
 
-    public Messages(String sender_id, String sender, String receiver_id, String receiver, String text) {
+    public Messages(String sender_id, String sender, String receiver_id, String receiver, String text, String imageUrl) {
         this.sender_id = sender_id;
         this.sender = sender;
         this.receiver_id = receiver_id;
         this.receiver = receiver;
         this.text = text;
+        this.imageUrl = imageUrl;
     }
 
     public String getSender_id() {
