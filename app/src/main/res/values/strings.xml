@@ -30,4 +30,7 @@
     <String name="rules">
         [Insert description of how to play the game here]
     </String>
+    <string name="title_activity_game">gameActivity</string>
+    <string name="ready_button_clicked">CANCEL</string>
+    <string name="ready_button_not_clicked">READY</string>
 </resources>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!---Source: https://www.youtube.com/watch?v=LXUDqGaToe0-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/bid1"
+        android:title="Five of a kind"
+        android:orderInCategory="1"></item>
+    <item
+        android:id="@+id/bid2"
+        android:title="Four of a kind"
+        android:orderInCategory="2"></item>
+    <item
+        android:id="@+id/bid3"
+        android:title="Full house"
+        android:orderInCategory="3"></item>
+    <item
+        android:id="@+id/bid4"
+        android:title="High straight"
+        android:orderInCategory="4"></item>
+    <item
+        android:id="@+id/bid5"
+        android:title="Low straight"
+        android:orderInCategory="5"></item>
+    <item
+        android:id="@+id/bid6"
+        android:title="Three of a kind"
+        android:orderInCategory="6"></item>
+    <item
+        android:id="@+id/bid7"
+        android:title="Two pair"
+        android:orderInCategory="7"></item>
+    <item
+        android:id="@+id/bid8"
+        android:title="One pair"
+        android:orderInCategory="8"></item>
+    <item
+        android:id="@+id/bid9"
+        android:title="6 high"
+        android:orderInCategory="9"></item>
+    <item
+        android:id="@+id/bid10"
+        android:title="5 high"
+        android:orderInCategory="10"></item>
+    <item
+        android:id="@+id/bid11"
+        android:title="4 high"
+        android:orderInCategory="11"></item>
+    <item
+        android:id="@+id/bid12"
+        android:title="3 high"
+        android:orderInCategory="12"></item>
+    <item
+        android:id="@+id/bid13"
+        android:title="2 high"
+        android:orderInCategory="13"></item>
+    <item
+        android:id="@+id/bid14"
+        android:title="1 high"
+        android:orderInCategory="14"></item>
+</menu>
