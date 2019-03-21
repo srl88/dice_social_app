@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    tools:context=".BidWindow"
+    android:background="@color/colorGray">
+
+    <Spinner
+        android:id="@+id/faceSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:entries="@array/faceSpinnerEntries"
+        android:prompt="@string/faceSpinnerPrompt" />
+
+    <Spinner
+        android:id="@+id/numberSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:entries="@array/numberSpinnerEntries"
+        android:prompt="@string/numberSpinnerPrompt" />
+
+</LinearLayout>

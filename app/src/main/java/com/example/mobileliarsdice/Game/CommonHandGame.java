@@ -6,7 +6,7 @@ package com.example.mobileliarsdice.Game;
 
 import java.util.ArrayList;
 
-public class CommonHandLiarsDiceGame {
+public class CommonHandGame {
     // Attributes
     private ArrayList<Player> players;
     private ArrayList<Integer> tokens;
@@ -19,7 +19,13 @@ public class CommonHandLiarsDiceGame {
     private int bid;
 
     // Constructor
-    public CommonHandLiarsDiceGame(ArrayList<Player> players, int ante) {
+    // ante: the amount that each player has to pay in order to start a game
+    // if the player quits in the middle of the game, he/she will lose all ante
+    // and the player remaining will automatically gain the pot
+    public CommonHandGame(ArrayList<Player> players, int ante) {
+        // Takeout ante from each player
+        // If any of the player does not have enough balance, set antePaidUp to false
+        // otherwise, antePaidUp = true
         this.players = players;
         this.numberOfPlayers = players.size();
         this.tokens = new ArrayList<Integer>();
@@ -32,6 +38,18 @@ public class CommonHandLiarsDiceGame {
         }
         pot = 0;
     }
+
+    public ArrayList<Integer> getTokens() {
+        return tokens;
+    }
+
+    public Cup getGameCup() {
+        return gameCup;
+    }
+
+    public Player getTurn() {
+        return turn;
+    }
     
     public int getPot() {
     	return pot;
@@ -40,42 +58,21 @@ public class CommonHandLiarsDiceGame {
     public int getBid() {
     	return bid;
     }
-    
-    public ArrayList<Player> getPlayers() {
-        return players;
-    }
-    
-    public ArrayList<Integer> getTokens() {
-        return tokens;
-    }
-    
-    public ArrayList<Cup> getCups() {
-        return cups;
-    }
-    
-    public Cup getGameCup() {
-    	return gameCup;
-    }
 
-    public Player getFirstPlayer() {
-        return firstPlayer;
-    }
-    
-    public Player getTurn() {
-        return turn;
-    }
-
-    // Start the game
+    // Start round
     // Choose the first player by each player rolling their five dice
     // The player with the highest ranking poker dice hand becomes the first player
     public void start() {
+        // Bid initialized (higher the number, lower the bid rank)
         bid = 100;
         // Check if the players have token, if no token remove player from the game
+        // The player remaining wins the pot
         for (int i = 0; i < numberOfPlayers; i++) {
             if (tokens.get(i) == 0) {
                 players.remove(i);
                 tokens.remove(i);
                 cups.remove(i);
+                // Add pot to the remaining player's balance
             }
         }
         numberOfPlayers = players.size();
@@ -120,24 +117,31 @@ public class CommonHandLiarsDiceGame {
         }
     }
 
-    public boolean bid(int newBid) {
+    public void bid(int newBid) {
         if (bid < newBid) {
-            return false;
         } else {
             bid = newBid;
-            return true;
         }
     }
 
+    // End round, return true if the challenger wins and return false if the challenger loses
     public boolean challenge(Player challenger) {
-        if (gameCup.getHand().getRank() >= bid) {
-            tokens.set(players.indexOf(turn), tokens.get(players.indexOf(turn)) - 1);
+        if (gameCup.getHand().getRank() < bid) {
+            tokens.set(players.indexOf(challenger), tokens.get(players.indexOf(challenger)) - 1);
             pot++;
             return true;
         } else {
-            tokens.set(players.indexOf(challenger), tokens.get(players.indexOf(challenger)) - 1);
+            // For two player game
+            tokens.set((players.indexOf(challenger) + 1) % numberOfPlayers, tokens.get((players.indexOf(challenger) + 1) % numberOfPlayers) - 1);
             pot++;
             return false;
         }
+    }
+
+    // For two player game, once a player quits, the player remaining automatically wins the pot
+    public void quit(Player quitter) {
+        tokens.remove(players.indexOf(quitter));
+        tokens.set(0, tokens.get(0) + pot);
+        players.remove(quitter);
     }
 }

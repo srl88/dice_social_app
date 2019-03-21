@@ -2,7 +2,7 @@
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".GameActivity"
+    tools:context=".CommonHandGameActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="10dp"
@@ -54,12 +54,14 @@
         <ImageView
             android:id="@+id/firstDiceImage"
             android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:onClick="onClick" />
 
         <ImageView
             android:id="@+id/secondDiceImage"
             android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:onClick="onClick" />
     </TableRow>
 
     <TableRow
@@ -69,12 +71,14 @@
         <ImageView
             android:id="@+id/thirdDiceImage"
             android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:onClick="onClick" />
 
         <ImageView
             android:id="@+id/fourthDiceImage"
             android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:onClick="onClick" />
     </TableRow>
 
     <TableRow
@@ -85,7 +89,16 @@
         <ImageView
             android:id="@+id/fifthDiceImage"
             android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:onClick="onClick" />
+
+        <Button
+            android:id="@+id/rollButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorGray"
+            android:onClick="onClick"
+            android:text="@string/roll_button" />
 
     </TableRow>
 
