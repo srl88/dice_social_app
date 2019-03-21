@@ -24,38 +24,56 @@
         android:roundIcon="@mipmap/app_foreground"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".deleteActivity"
-            android:label="@string/title_activity_logout"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:noHistory="true">
-        </activity>
+            <activity
+                android:name=".deleteActivity"
+                android:label="@string/title_activity_logout"
+                android:theme="@style/AppTheme.NoActionBar"
+                android:noHistory="true">
+            </activity>
 
-        <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.example.mobileliarsdice.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
-        </provider>
+            <provider
+                android:name="android.support.v4.content.FileProvider"
+                android:authorities="com.example.mobileliarsdice.fileprovider"
+                android:exported="false"
+                android:grantUriPermissions="true">
+                <meta-data
+                    android:name="android.support.FILE_PROVIDER_PATHS"
+                    android:resource="@xml/file_paths" />
+            </provider>
 
-        <activity android:name=".MessageActivity" />
-        <activity
-            android:name=".Main"
-            android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".loginActivity"
-            android:label="Liar&apos;s Dice"
-            android:noHistory="true">
+            <activity android:name=".MessageActivity" />
+            <activity
+                android:name=".Main"
+                android:label="@string/title_activity_main"
+                android:theme="@style/AppTheme.NoActionBar" />
+            <activity
+                android:name=".loginActivity"
+                android:label="Liar&apos;s Dice"
+                android:noHistory="true">
+                <intent-filter>
+                    <action android:name="android.intent.action.MAIN" />
+
+                    <category android:name="android.intent.category.LAUNCHER" />
+                </intent-filter>
+            </activity>
+        <!--
+        <activity android:name=".CommonHandGameActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        -->
+
+        <!--
+        <activity
+            android:name=".SingleHandGameActivity"
+            android:label="@string/title_activity_single_hand_game"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".BidWindow"
+            android:theme="@style/AppTheme.PopupWindow"></activity>
+        -->
     </application>
 
 </manifest>

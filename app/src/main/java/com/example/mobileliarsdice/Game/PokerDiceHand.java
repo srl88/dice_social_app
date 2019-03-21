@@ -14,7 +14,7 @@ public class PokerDiceHand {
     private int rank;
 
 
-    // Constructor
+    // Constructor for getting a hand for a cup
     public PokerDiceHand(Cup cup) {
         fiveDice = new ArrayList<Die>();
         fiveDice.add(cup.getCup().get(0));
@@ -24,8 +24,8 @@ public class PokerDiceHand {
         fiveDice.add(cup.getCup().get(4));
         getHand();
     }
-    
-    // Constructor
+
+    // Constructor for getting a hand without a cup
     public PokerDiceHand(Die first, Die second, Die third, Die fourth, Die fifth) {
         fiveDice = new ArrayList<Die>();
         fiveDice.add(first);
@@ -36,8 +36,60 @@ public class PokerDiceHand {
         getHand();
     }
 
+    // Constructor for getting a hand string with rank
+    public PokerDiceHand(int rank) {
+        switch(rank) {
+            case 1:
+                hand = "Five of a kind";
+                break;
+            case 2:
+                hand = "Four of a kind";
+                break;
+            case 3:
+                hand = "Full house";
+                break;
+            case 4:
+                hand = "High straight";
+                break;
+            case 5:
+                hand = "Low straight";
+                break;
+            case 6:
+                hand = "Three of a kind";
+                break;
+            case 7:
+                hand = "Two pair";
+                break;
+            case 8:
+                hand = "One pair";
+                break;
+            case 9:
+                hand = "6 high";
+                break;
+            case 10:
+                hand = "5 high";
+                break;
+            case 11:
+                hand = "4 high";
+                break;
+            case 12:
+                hand = "3 high";
+                break;
+            case 13:
+                hand = "2 high";
+                break;
+            case 14:
+                hand = "1 high";
+                break;
+        }
+    }
+
+    public String toString() {
+        return hand;
+    }
+
     public String getHand() {
-    	orderByFace();
+        orderByFace();
         if (isFiveOfAKind() == true) {
             hand = "Five of a kind";
             rank = 1;
@@ -73,6 +125,8 @@ public class PokerDiceHand {
         return rank;
     }
 
+
+
     public void orderByFace() {
         orderedDice = new ArrayList<Die>();
         int current = 0;
@@ -93,9 +147,9 @@ public class PokerDiceHand {
     // Check if Five of a kind
     public boolean isFiveOfAKind() {
         if (orderedDice.get(0).getFace() == orderedDice.get(1).getFace()
-            && orderedDice.get(1).getFace() == orderedDice.get(2).getFace()
-            && orderedDice.get(2).getFace() == orderedDice.get(3).getFace()
-            && orderedDice.get(3).getFace() == orderedDice.get(4).getFace()) {
+                && orderedDice.get(1).getFace() == orderedDice.get(2).getFace()
+                && orderedDice.get(2).getFace() == orderedDice.get(3).getFace()
+                && orderedDice.get(3).getFace() == orderedDice.get(4).getFace()) {
             return true;
         } else {
             return false;

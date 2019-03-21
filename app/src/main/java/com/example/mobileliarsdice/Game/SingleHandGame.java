@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Created by Sung Won Caleb Bhyun
  */
 
-public class SingleHandLiarsDiceGame {
+public class SingleHandGame {
 	// Attributes
     private ArrayList<Player> players;
     private ArrayList<Cup> cups;
@@ -17,7 +17,7 @@ public class SingleHandLiarsDiceGame {
     private int bidNumber;
     
     // Constructor
-    public SingleHandLiarsDiceGame(ArrayList<Player> players) {
+    public SingleHandGame(ArrayList<Player> players) {
         this.players = players;
         this.numberOfPlayers = players.size();
         this.cups = new ArrayList<Cup>();
