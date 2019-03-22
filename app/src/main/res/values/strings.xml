@@ -35,26 +35,18 @@
     <string name="ready_button_not_clicked">READY</string>
     <string name="roll_button">ROLL</string>
     <string name="title_activity_single_hand_game">SingleHandGameActivity</string>
-    <string name="faceSpinnerPrompt">Face</string>
-    <string name="numberSpinnerPrompt">Quantity</string>
-    <string-array name="faceSpinnerEntries">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-    </string-array>
+    <string name="numberSpinnerPrompt">Number</string>
     <string-array name="numberSpinnerEntries">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-        <item>9</item>
+        <item>Quantity</item>
         <item>10</item>
+        <item>9</item>
+        <item>8</item>
+        <item>7</item>
+        <item>6</item>
+        <item>5</item>
+        <item>4</item>
+        <item>3</item>
+        <item>2</item>
+        <item>1</item>
     </string-array>
 </resources>

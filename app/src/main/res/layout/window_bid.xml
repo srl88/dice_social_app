@@ -1,27 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="center"
+    android:layout_gravity="center"
     tools:context=".BidWindow"
     android:background="@color/colorGray">
 
-    <Spinner
-        android:id="@+id/faceSpinner"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/layoutFace"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:entries="@array/faceSpinnerEntries"
-        android:prompt="@string/faceSpinnerPrompt" />
+        android:layout_width="wrap_content"
+        android:gravity="center_horizontal">
+
+        <ImageView
+            android:id="@+id/faceOneImage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:onClick="onClick"
+            android:src="@drawable/face1" />
+
+        <ImageView
+            android:id="@+id/faceTwoImage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:onClick="onClick"
+            android:src="@drawable/face2" />
+
+        <ImageView
+            android:id="@+id/faceThreeImage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:onClick="onClick"
+            android:src="@drawable/face3" />
+
+        <ImageView
+            android:id="@+id/faceFourImage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:onClick="onClick"
+            android:src="@drawable/face4" />
+
+        <ImageView
+            android:id="@+id/faceFiveImage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:onClick="onClick"
+            android:src="@drawable/face5" />
+
+        <ImageView
+            android:id="@+id/faceSixImage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:onClick="onClick"
+            android:src="@drawable/face6" />
+
+    </LinearLayout>
 
     <Spinner
         android:id="@+id/numberSpinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:entries="@array/numberSpinnerEntries"
-        android:prompt="@string/numberSpinnerPrompt" />
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_below="@+id/layoutFace" />
 
-</LinearLayout>
+</RelativeLayout>

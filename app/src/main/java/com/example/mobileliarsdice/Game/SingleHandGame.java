@@ -41,10 +41,6 @@ public class SingleHandGame {
     public ArrayList<Cup> getCups() {
         return cups;
     }
-
-    public Player getFirstPlayer() {
-        return firstPlayer;
-    }
     
     public Player getTurn() {
         return turn;
@@ -80,7 +76,7 @@ public class SingleHandGame {
                 firstPlayer = players.get(i);
             }
         }
-        // Roll all five dice inside the cup for each player
+        // Roll all dice inside the cup for each player
         for (int i = 0; i < numberOfPlayers; i++) {
             cups.get(i).shake();
         }
@@ -115,7 +111,7 @@ public class SingleHandGame {
             }
         }
         if (count < bidNumber) {
-        	cups.get(players.indexOf(turn)).takeOut();
+        	cups.get((players.indexOf(challenger) + 1) % numberOfPlayers).takeOut();
             return true;
         } else {
         	cups.get(players.indexOf(challenger)).takeOut();
