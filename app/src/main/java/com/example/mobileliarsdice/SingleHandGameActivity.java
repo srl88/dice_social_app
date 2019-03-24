@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 public class SingleHandGameActivity extends AppCompatActivity {
     private Intent intent;
+    private Bundle bundle;
 
     private TextView currentTurn, currentBid;
     private ImageView firstDiceImage, secondDiceImage, thirdDiceImage, fourthDiceImage, fifthDiceImage;
@@ -60,6 +61,10 @@ public class SingleHandGameActivity extends AppCompatActivity {
         fifthDiceImage.setVisibility(View.INVISIBLE);
         bidButton.setEnabled(false);
         challengeButton.setEnabled(false);
+
+        // Initialize face and number
+        bidFace = 0;
+        bidNumber = 0;
 
         // Add players
         Player player1 = new Player("A", 20);
@@ -101,46 +106,110 @@ public class SingleHandGameActivity extends AppCompatActivity {
 
             case R.id.bidButton:
                 intent = new Intent(this, BidWindow.class);
-                startActivity(intent);
-                Bundle extras = getIntent().getExtras();
-                if (extras != null) {
-                    bidFace = extras.getInt("face");
-                    bidNumber = extras.getInt("number");
-                    Toast.makeText(SingleHandGameActivity.this, "Face: " + bidFace + ", Number: " + bidNumber, Toast.LENGTH_SHORT).show();
-                }
-
-
-                sh_game.endTurn();
-                currentTurn.setText(sh_game.getTurn().getName());
-                currentBid.setText(sh_game.getBidFace() + " x" + sh_game.getBidNumber());
-                updateDiceImages();
+                intent.putExtra("face", bidFace);
+                intent.putExtra("number", bidNumber);
+                // Prevent BidWindow from opening twice
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivityForResult(intent, 1);
                 break;
 
             case R.id.challengeButton:
                 if(sh_game.challenge(sh_game.getTurn())) {
                     Toast.makeText(SingleHandGameActivity.this, "Player " + sh_game.getTurn().getName() + " wins!", Toast.LENGTH_SHORT).show();
-
                 } else {
                     Toast.makeText(SingleHandGameActivity.this, "Player " + sh_game.getTurn().getName() + " loses!", Toast.LENGTH_SHORT).show();
-
                 }
-                recreate();
+                endRound();
                 break;
 
         }
     }
 
     public void updateDiceImages() {
-        diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(0).getFace(), "drawable", getPackageName());
-        firstDiceImage.setImageResource(diceID);
-        diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(1).getFace(), "drawable", getPackageName());
-        secondDiceImage.setImageResource(diceID);
-        diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(2).getFace(), "drawable", getPackageName());
-        thirdDiceImage.setImageResource(diceID);
-        diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(3).getFace(), "drawable", getPackageName());
-        fourthDiceImage.setImageResource(diceID);
-        diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(4).getFace(), "drawable", getPackageName());
-        fifthDiceImage.setImageResource(diceID);
-        System.out.println(sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().toString());
+        Toast.makeText(getApplicationContext(),"Size: " + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().size(),Toast.LENGTH_SHORT).show();
+        if(sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().size() >= 1) {
+            firstDiceImage.setVisibility(View.VISIBLE);
+            diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(0).getFace(), "drawable", getPackageName());
+            firstDiceImage.setImageResource(diceID);
+        } else {
+            firstDiceImage.setVisibility(View.INVISIBLE);
+        }
+        if(sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().size() >= 2) {
+            secondDiceImage.setVisibility(View.VISIBLE);
+            diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(1).getFace(), "drawable", getPackageName());
+            secondDiceImage.setImageResource(diceID);
+        } else {
+            secondDiceImage.setVisibility(View.INVISIBLE);
+        }
+        if(sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().size() >= 3) {
+            thirdDiceImage.setVisibility(View.VISIBLE);
+            diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(2).getFace(), "drawable", getPackageName());
+            thirdDiceImage.setImageResource(diceID);
+        } else {
+            thirdDiceImage.setVisibility(View.INVISIBLE);
+        }
+        if(sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().size() >= 4) {
+            fourthDiceImage.setVisibility(View.VISIBLE);
+            diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(3).getFace(), "drawable", getPackageName());
+            fourthDiceImage.setImageResource(diceID);
+        } else {
+            fourthDiceImage.setVisibility(View.INVISIBLE);
+        }
+        if(sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().size() >= 5) {
+            fifthDiceImage.setVisibility(View.VISIBLE);
+            diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(4).getFace(), "drawable", getPackageName());
+            fifthDiceImage.setImageResource(diceID);
+            System.out.println(sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().toString());
+        } else {
+            fifthDiceImage.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    // Source: https://stackoverflow.com/questions/2091465/how-do-i-pass-data-between-activities-in-android-application
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                bundle = data.getExtras();
+                bidFace = (int) bundle.get("face");
+                bidNumber = (int) bundle.get("number");
+
+                sh_game.bid(bidFace, bidNumber);
+                sh_game.endTurn();
+                currentTurn.setText(sh_game.getTurn().getName());
+                currentBid.setText(sh_game.getBidFace() + " x" + sh_game.getBidNumber());
+                updateDiceImages();
+
+                // Maximum bid; next play can only challenge
+                if(bidNumber == 10) {
+                    bidButton.setEnabled(false);
+                }
+                // After first bid, players are able to challenge
+                challengeButton.setEnabled(true);
+            }
+        }
+    }
+
+    public void startRound() {
+        sh_game.start();
+        Toast.makeText(getApplicationContext(),"A round has started.",Toast.LENGTH_SHORT).show();
+        currentTurn.setText(sh_game.getTurn().getName());
+        currentBid.setText("");
+        // Database ROOMS: set turn = ch_game.getTurn().getName()
+        bidButton.setEnabled(true);
+        challengeButton.setEnabled(false);
+        // Update dice images
+        updateDiceImages();
+    }
+
+    public void endRound() {
+        Toast.makeText(getApplicationContext(),"A round has ended.",Toast.LENGTH_SHORT).show();
+        // Reset values
+        bidFace = 0;
+        bidNumber = 0;
+        // Automatically start next round
+        startRound();
     }
 }

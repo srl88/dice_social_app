@@ -360,7 +360,6 @@ public class CommonHandGameActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(CommonHandGameActivity.this, "Player " + ch_game.getTurn().getName() + " loses!", Toast.LENGTH_SHORT).show();
                 }
-                //recreate();
                 firstDiceImage.setEnabled(true);
                 secondDiceImage.setEnabled(true);
                 thirdDiceImage.setEnabled(true);

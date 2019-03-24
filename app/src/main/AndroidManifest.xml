@@ -24,6 +24,8 @@
         android:roundIcon="@mipmap/app_foreground"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+            <!--
+            -->
             <activity
                 android:name=".deleteActivity"
                 android:label="@string/title_activity_logout"
@@ -56,6 +58,8 @@
                     <category android:name="android.intent.category.LAUNCHER" />
                 </intent-filter>
             </activity>
+
+        <!-- COMMON HAND GAME -->
         <!--
         <activity android:name=".CommonHandGameActivity">
             <intent-filter>
@@ -66,11 +70,15 @@
         </activity>
         -->
 
+        <!-- SINGLE HAND GAME -->
         <!--
-        <activity
-            android:name=".SingleHandGameActivity"
-            android:label="@string/title_activity_single_hand_game"
-            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".SingleHandGameActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".BidWindow"
             android:theme="@style/AppTheme.PopupWindow"></activity>
         -->
