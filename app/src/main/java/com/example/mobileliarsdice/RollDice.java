@@ -1,5 +1,10 @@
 package com.example.mobileliarsdice;
 
+/**
+ * Created by Philibert ADAM
+ */
+
+
 import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.os.Build;
