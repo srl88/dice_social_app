@@ -37,9 +37,10 @@ public class SingleHandGameActivity extends AppCompatActivity {
     private SingleHandGame sh_game;
     private boolean readyButtonClicked;
 
+    private SingleHandRooms room;
     private String room_id;
     private String player_id;
-    private String roomMaster;
+    private boolean roomMaster;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,30 +77,38 @@ public class SingleHandGameActivity extends AppCompatActivity {
 
         // Check if the player is room master
         intent = getIntent();
-        roomMaster = intent.getStringExtra("roomMaster");
+        roomMaster = intent.getBooleanExtra("roomMaster", true);
         player_id = intent.getStringExtra("player_id");
-        if(roomMaster.equals("true")) {
-            // Create room
+        if(roomMaster == true) {
+            // Create room on database
             database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS");
-            String id = database.push().getKey();
-            SingleHandRooms room = new SingleHandRooms(id, player_id, "", false, false, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 0, 0);
-            database.child(id).setValue(room);
+            room_id = database.push().getKey();
+            // Create room with empty player2_id
+            room = new SingleHandRooms(room_id, player_id, "", false, false, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 0, 0);
+            database.child(room_id).setValue(room);
         } else {
             // Player 1 passes room id through invitation and
             // player 2 gets the room id by accepting invitation
-            // and passes the room id when opening this activity
-            final String id = intent.getStringExtra("id");
-            database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS");
+            // and passes the room id when starting this activity
+            room_id = intent.getStringExtra("room_id");
             // Read room information from database and update with player2_id added
+            updateRoom(room_id);
+            room.setPlayer2_id(player_id);
+            database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS").child(room_id);
+            database.setValue(room);
+            /*database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS");
             database.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    SingleHandRooms roomData;
                     for(DataSnapshot roomSnapshot : dataSnapshot.getChildren()) {
-                        SingleHandRooms room = roomSnapshot.getValue(SingleHandRooms.class);
-                        if(room.getRoom_id().equals(id)) {
-                            room.setPlayer2_id(player_id);
+                        roomData = roomSnapshot.getValue(SingleHandRooms.class);
+                        // If room with matching room_id was found
+                        if(roomData.getRoom_id().equals(room_id)) {
+                            roomData.setPlayer2_id(player_id);
+                            // Update room information with player2_id added on database
                             database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS").child(id);
-                            database.setValue(room);
+                            database.setValue(roomData);
                             break;
                         }
                     }
@@ -107,9 +116,9 @@ public class SingleHandGameActivity extends AppCompatActivity {
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
                 }
-            });
-        }
+            });*/
 
+        }
 
         // Add players
         Player player1 = new Player("A", 20);
@@ -121,35 +130,78 @@ public class SingleHandGameActivity extends AppCompatActivity {
         sh_game = new SingleHandGame(players);
     }
 
+    // Get room information from the database and update room variable in the activity
+    public void updateRoom(final String room_id) {
+        database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS");
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                SingleHandRooms roomData;
+                for(DataSnapshot roomSnapshot : dataSnapshot.getChildren()) {
+                    roomData = roomSnapshot.getValue(SingleHandRooms.class);
+                    // If room with matching room_id was found
+                    if(roomData.getRoom_id().equals(room_id)) {
+                        room = roomData;
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
     public void onClick(View view) {
         switch(view.getId()) {
-                    case R.id.readyButton:
-                        if(!readyButtonClicked) {
-                    /*
+            case R.id.readyButton:
+                if(!readyButtonClicked) {
+                    // Update ready button
+                    readyButtonClicked = true;
+                    readyButton.setText(getResources().getText(R.string.ready_button_clicked));
+                    readyButton.setBackgroundColor(getResources().getColor(R.color.colorRed,getResources().newTheme()));
+                    Toast.makeText(getApplicationContext(),"Ready.",Toast.LENGTH_SHORT).show();
+                    // Check database and if both player 1 and player 2 are ready, start the game
+                    updateRoom(room_id);
+                    if(room.isPlayer1_ready() && room.isPlayer2_ready()) {
+                        // If both players are ready, start the game
+                    } else {
+
+                    }
+                } else {
+                    // Update ready button
+                    readyButtonClicked = false;
+                    readyButton.setText(getResources().getText(R.string.ready_button_not_clicked));
+                    readyButton.setBackgroundColor(getResources().getColor(R.color.colorGray,getResources().newTheme()));
+                    Toast.makeText(getApplicationContext(),"Cancelled.",Toast.LENGTH_SHORT).show();
+                }
+
+            /*case R.id.readyButton:
+                if(!readyButtonClicked) {
+                    *//*
                     DatabaseReference database;
                     database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS");
                     String id = database.push().getKey();
                     SingleHandRooms dummy = new SingleHandRooms(id, "lVFtk3vNfcczHizIQNwGemZZiOA3", "PvIJDpRRA5UtUKLpioeMvQ6PWHl1", false, false, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 0, 0);
                     database.child(id).setValue(dummy);
-                    */
+                    *//*
 
-                            readyButton.setText(getResources().getText(R.string.ready_button_clicked));
-                            readyButton.setBackgroundColor(getResources().getColor(R.color.colorGray,getResources().newTheme()));
-                            readyButtonClicked = true;
-                            // If all players are ready start the game
-                            sh_game.start();
-                            Toast.makeText(getApplicationContext(),"The game has started.",Toast.LENGTH_SHORT).show();
-                            currentTurn.setText(sh_game.getTurn().getName());
-                            readyButton.setEnabled(false);
-                            bidButton.setEnabled(true);
-                            // Update dice images
-                            updateDiceImages();
+                    readyButton.setText(getResources().getText(R.string.ready_button_clicked));
+                    readyButton.setBackgroundColor(getResources().getColor(R.color.colorGray,getResources().newTheme()));
+                    readyButtonClicked = true;
+                    // If all players are ready start the game
+                    sh_game.start();
+                    Toast.makeText(getApplicationContext(),"The game has started.",Toast.LENGTH_SHORT).show();
+                    currentTurn.setText(sh_game.getTurn().getName());
+                    readyButton.setEnabled(false);
+                    bidButton.setEnabled(true);
+                    // Update dice images
+                    updateDiceImages();
                 } else {
                     readyButton.setText(getResources().getText(R.string.ready_button_not_clicked));
                     readyButton.setBackgroundColor(getResources().getColor(R.color.colorRed,getResources().newTheme()));
                     readyButtonClicked = false;
                 }
-                break;
+                break;*/
 
             case R.id.quitButton:
                 finish();
