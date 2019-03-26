@@ -1,27 +1,31 @@
 package com.example.mobileliarsdice;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mobileliarsdice.Game.SingleHandGame;
 import com.example.mobileliarsdice.Game.Player;
-import com.example.mobileliarsdice.Game.PokerDiceHand;
+import com.example.mobileliarsdice.Models.SingleHandRooms;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 public class SingleHandGameActivity extends AppCompatActivity {
     private Intent intent;
     private Bundle bundle;
+
+    private DatabaseReference database;
 
     private TextView currentTurn, currentBid;
     private ImageView firstDiceImage, secondDiceImage, thirdDiceImage, fourthDiceImage, fifthDiceImage;
@@ -32,6 +36,10 @@ public class SingleHandGameActivity extends AppCompatActivity {
 
     private SingleHandGame sh_game;
     private boolean readyButtonClicked;
+
+    private String room_id;
+    private String player_id;
+    private String roomMaster;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,30 +74,76 @@ public class SingleHandGameActivity extends AppCompatActivity {
         bidFace = 0;
         bidNumber = 0;
 
+        // Check if the player is room master
+        intent = getIntent();
+        roomMaster = intent.getStringExtra("roomMaster");
+        player_id = intent.getStringExtra("player_id");
+        if(roomMaster.equals("true")) {
+            // Create room
+            database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS");
+            String id = database.push().getKey();
+            SingleHandRooms room = new SingleHandRooms(id, player_id, "", false, false, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 0, 0);
+            database.child(id).setValue(room);
+        } else {
+            // Player 1 passes room id through invitation and
+            // player 2 gets the room id by accepting invitation
+            // and passes the room id when opening this activity
+            final String id = intent.getStringExtra("id");
+            database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS");
+            // Read room information from database and update with player2_id added
+            database.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for(DataSnapshot roomSnapshot : dataSnapshot.getChildren()) {
+                        SingleHandRooms room = roomSnapshot.getValue(SingleHandRooms.class);
+                        if(room.getRoom_id().equals(id)) {
+                            room.setPlayer2_id(player_id);
+                            database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS").child(id);
+                            database.setValue(room);
+                            break;
+                        }
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
+        }
+
+
         // Add players
         Player player1 = new Player("A", 20);
         Player player2 = new Player("B", 20);
         ArrayList<Player> players = new ArrayList<Player>();
         players.add(player1);
         players.add(player2);
+
         sh_game = new SingleHandGame(players);
     }
 
     public void onClick(View view) {
         switch(view.getId()) {
-            case R.id.readyButton:
-                if(!readyButtonClicked) {
-                    readyButton.setText(getResources().getText(R.string.ready_button_clicked));
-                    readyButton.setBackgroundColor(getResources().getColor(R.color.colorGray,getResources().newTheme()));
-                    readyButtonClicked = true;
-                    // If all players are ready start the game
-                    sh_game.start();
-                    Toast.makeText(getApplicationContext(),"The game has started.",Toast.LENGTH_SHORT).show();
-                    currentTurn.setText(sh_game.getTurn().getName());
-                    readyButton.setEnabled(false);
-                    bidButton.setEnabled(true);
-                    // Update dice images
-                    updateDiceImages();
+                    case R.id.readyButton:
+                        if(!readyButtonClicked) {
+                    /*
+                    DatabaseReference database;
+                    database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS");
+                    String id = database.push().getKey();
+                    SingleHandRooms dummy = new SingleHandRooms(id, "lVFtk3vNfcczHizIQNwGemZZiOA3", "PvIJDpRRA5UtUKLpioeMvQ6PWHl1", false, false, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 0, 0);
+                    database.child(id).setValue(dummy);
+                    */
+
+                            readyButton.setText(getResources().getText(R.string.ready_button_clicked));
+                            readyButton.setBackgroundColor(getResources().getColor(R.color.colorGray,getResources().newTheme()));
+                            readyButtonClicked = true;
+                            // If all players are ready start the game
+                            sh_game.start();
+                            Toast.makeText(getApplicationContext(),"The game has started.",Toast.LENGTH_SHORT).show();
+                            currentTurn.setText(sh_game.getTurn().getName());
+                            readyButton.setEnabled(false);
+                            bidButton.setEnabled(true);
+                            // Update dice images
+                            updateDiceImages();
                 } else {
                     readyButton.setText(getResources().getText(R.string.ready_button_not_clicked));
                     readyButton.setBackgroundColor(getResources().getColor(R.color.colorRed,getResources().newTheme()));
