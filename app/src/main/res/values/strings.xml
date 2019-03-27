@@ -35,7 +35,8 @@
     <string name="ready_button_not_clicked">READY</string>
     <string name="quit_button">LEAVE</string>
     <string name="roll_button">ROLL</string>
-    <string name="title_activity_single_hand_game">SingleHandGameActivity</string>
+    <string name="lblCurrentTurn">Turn: </string>
+    <string name="lblCurrentBid">Current bid: </string>
     <string name="numberSpinnerPrompt">Number</string>
     <string-array name="numberSpinnerEntries">
         <item>Quantity</item>

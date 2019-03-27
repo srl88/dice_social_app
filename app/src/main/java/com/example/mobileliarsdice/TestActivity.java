@@ -30,7 +30,7 @@ public class TestActivity extends AppCompatActivity {
                 intent = new Intent(this, SingleHandGameActivity.class);
                 intent.putExtra("roomMaster", false);
                 intent.putExtra("player_id", "PvIJDpRRA5UtUKLpioeMvQ6PWHl1");
-                intent.putExtra("room_id", "-Lb-4Lykdzydeh4ARfLW");
+                intent.putExtra("room_id", "-Lb-pPhIUrFHJvlv52Bc");
                 startActivity(intent);
                 break;
         }

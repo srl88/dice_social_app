@@ -27,7 +27,7 @@ public class SingleHandGameActivity extends AppCompatActivity {
 
     private DatabaseReference database;
 
-    private TextView currentTurn, currentBid;
+    private TextView lblCurrentTurn, lblCurrentBid, currentTurn, currentBid;
     private ImageView firstDiceImage, secondDiceImage, thirdDiceImage, fourthDiceImage, fifthDiceImage;
     private Button readyButton, quitButton, bidButton, challengeButton;
 
@@ -42,11 +42,15 @@ public class SingleHandGameActivity extends AppCompatActivity {
     private String player_id;
     private boolean roomMaster;
     private boolean ended;
+    private boolean leave;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_hand_game);
+
+        lblCurrentTurn = findViewById(R.id.lblCurrentTurn);
+        lblCurrentBid = findViewById(R.id.lblCurrentBid);
 
         currentTurn = findViewById(R.id.currentTurn);
         currentBid = findViewById(R.id.currentBid);
@@ -64,6 +68,8 @@ public class SingleHandGameActivity extends AppCompatActivity {
 
         readyButtonClicked = false;
 
+        lblCurrentTurn.setVisibility(View.INVISIBLE);
+        lblCurrentBid.setVisibility(View.INVISIBLE);
         firstDiceImage.setVisibility(View.INVISIBLE);
         secondDiceImage.setVisibility(View.INVISIBLE);
         thirdDiceImage.setVisibility(View.INVISIBLE);
@@ -76,6 +82,7 @@ public class SingleHandGameActivity extends AppCompatActivity {
         bidFace = 0;
         bidNumber = 0;
         ended = false;
+        leave = false;
 
 
         // Check if the player is room master
@@ -235,6 +242,8 @@ public class SingleHandGameActivity extends AppCompatActivity {
                             // Update displayed information
                             bidFace = roomSnapshot.getBid_face();
                             bidNumber = roomSnapshot.getBid_number();
+                            lblCurrentTurn.setVisibility(View.VISIBLE);
+                            lblCurrentBid.setVisibility(View.VISIBLE);
                             currentTurn.setText("Player " + roomSnapshot.getTurn());
                             currentBid.setText(roomSnapshot.getBid_face() + " x" + roomSnapshot.getBid_number());
                             // Update dice images
@@ -338,7 +347,7 @@ public class SingleHandGameActivity extends AppCompatActivity {
                             }
 
                             // Once a player has challenged another player
-                            if(roomSnapshot.isChallenged()) {
+                            if(!ended && roomSnapshot.isChallenged()) {
                                 if(roomMaster && roomSnapshot.getRoundWinner() == 1) {
                                     Toast.makeText(SingleHandGameActivity.this, "You have won the round!", Toast.LENGTH_SHORT).show();
                                 } else if(roomMaster && roomSnapshot.getRoundWinner() == 2) {
@@ -388,9 +397,13 @@ public class SingleHandGameActivity extends AppCompatActivity {
                     if(ended) {
                         currentTurn.setText("The game has ended.");
                     } else {
-                        currentTurn.setText("Your opponent has left.");
+                        if(!leave) {
+                            currentTurn.setText("Your opponent has left.");
+                        }
                     }
                     currentBid.setText("");
+                    lblCurrentTurn.setVisibility(View.INVISIBLE);
+                    lblCurrentBid.setVisibility(View.INVISIBLE);
                     firstDiceImage.setVisibility(View.INVISIBLE);
                     secondDiceImage.setVisibility(View.INVISIBLE);
                     thirdDiceImage.setVisibility(View.INVISIBLE);
@@ -407,15 +420,28 @@ public class SingleHandGameActivity extends AppCompatActivity {
         });
     }
 
+    // Disable back button
+    @Override
+    public void onBackPressed() {
+        leave = true;
+        database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS").child(room_id);
+        database.removeValue();
+        finish();
+    }
+
     public void onClick(View view) {
         switch(view.getId()) {
+            case R.id.inGameChat:
+                Toast.makeText(getApplicationContext(),"CHAT",Toast.LENGTH_SHORT).show();
+                //intent = new Intent(this, chatWindow.class);
+                //startActivity(intent);
+                break;
             case R.id.readyButton:
                 if(!readyButtonClicked) {
                     // Update ready button
                     readyButtonClicked = true;
                     readyButton.setText(getResources().getText(R.string.ready_button_clicked));
                     readyButton.setBackgroundColor(getResources().getColor(R.color.colorGray,getResources().newTheme()));
-                    Toast.makeText(getApplicationContext(),"Ready.",Toast.LENGTH_SHORT).show();
                     // Update database
                     if(roomMaster == true) {
                         database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS").child(room_id).child("player1_ready");
@@ -429,7 +455,6 @@ public class SingleHandGameActivity extends AppCompatActivity {
                     readyButtonClicked = false;
                     readyButton.setText(getResources().getText(R.string.ready_button_not_clicked));
                     readyButton.setBackgroundColor(getResources().getColor(R.color.colorRed,getResources().newTheme()));
-                    Toast.makeText(getApplicationContext(),"Cancelled.",Toast.LENGTH_SHORT).show();
                     // Update database
                     if(roomMaster == true) {
                         database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS").child(room_id).child("player1_ready");
@@ -443,6 +468,7 @@ public class SingleHandGameActivity extends AppCompatActivity {
 
             case R.id.quitButton:
                 // Destroy data
+                leave = true;
                 database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS").child(room_id);
                 database.removeValue();
                 finish();
