@@ -9,6 +9,8 @@ import com.example.mobileliarsdice.Models.Users;
  */
 public class UserGlobals {
 
+    static public Boolean isInvited = false;
+    static public Boolean isChallanger = false;
     static public  Users mUser = null;
     static public String current_chat_id = "";
 

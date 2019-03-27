@@ -10,6 +10,8 @@ public class Users extends UserInfo{
     private Boolean online;
     private float score;
     private int distance;
+    private String playingWithId;
+
     public  Users(){
         super();
     }
@@ -22,6 +24,18 @@ public class Users extends UserInfo{
         this.online = online;
         this.score = score;
         this.distance = distance;
+        this.playingWithId = "NONE";
+    }
+
+
+    public Users(String id, String userName, String url, double longitude, double latitude, Boolean online, float score, int distance, String playingWithId) {
+        super(id, userName, url);
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.online = online;
+        this.score = score;
+        this.distance = distance;
+        this.playingWithId = playingWithId;
     }
 
     public int getDistance() {
@@ -63,5 +77,8 @@ public class Users extends UserInfo{
         this.online = online;
     }
 
+    public String getPlayingWithId() { return playingWithId; }
+
+    public void setPlayingWithId(String playingWithId) { this.playingWithId = playingWithId; }
 
 }

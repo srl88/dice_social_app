@@ -38,6 +38,9 @@
     <string name="lblCurrentTurn">Turn: </string>
     <string name="lblCurrentBid">Current bid: </string>
     <string name="numberSpinnerPrompt">Number</string>
+    <string name="accept">Accept</string>
+    <string name="reject">Reject</string>
+    <string name="cancel2">Cancel</string>
     <string-array name="numberSpinnerEntries">
         <item>Quantity</item>
         <item>10</item>
