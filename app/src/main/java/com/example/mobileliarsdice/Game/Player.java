@@ -41,20 +41,13 @@ public class Player {
 
             // Check if I hold a better bid
             boolean betterBid = false;
-            int myBidDie;
             int myBidCount;
             int myHighestCount = 0;
-            int myHighDie = bidDie +1;
 
-            for(int i = 2; i < 7; i++) {
-                if(dieCounts[i] >= myHighestCount) {
-                    myHighestCount = dieCounts[i];
-                    myHighDie = i;
-                }
-            }
-            if((myHighestCount > bidCount) || ((myHighestCount == bidCount) && (myHighDie > bidDie))) {
+            myHighestCount = dieCounts[bidDie];
+
+            if((myHighestCount > bidCount) || (myHighestCount == bidCount)) {
                 betterBid = true;
-                myBidDie = myHighDie;
                 myBidCount = myHighestCount;
             }
 
@@ -67,10 +60,6 @@ public class Player {
                     diceInPlay += cups.get(i).getDiceNumber();
                 }
                 unknownDice = diceInPlay - cups.get(index).getDiceNumber();
-
-                if (myHighDie <= bidDie) {
-                    myDiceNeeded++;
-                }
 
                 int previousBidder = index - 1;
 
@@ -107,7 +96,7 @@ public class Player {
                     return "Liar!";
             }
 
-            return (bidCount+1) + " " + myHighDie;
+            return (bidCount+1) + " " + bidDie;
         }
 
         return 2 + " " + 2;
