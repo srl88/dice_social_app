@@ -15,42 +15,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/appbar_padding_top"
-            android:theme="@style/AppTheme.AppBarOverlay">
+            android:background="@color/common_google_signin_btn_text_dark_pressed">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
+                android:gravity="center"
                 android:textAlignment="inherit">
 
-                <ImageView
-                    android:id="@+id/back_button"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="0"
-                    android:contentDescription="@string/placeHolder"
-                    app:srcCompat="@drawable/ic_backarrow_foreground" />
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/image_profile"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="0"
-                    android:src="@mipmap/app_foreground" />
-
                 <TextView
-                    android:id="@+id/user_name"
+                    android:id="@+id/title"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif"
-                    android:text="@string/appName"
-                    android:textAlignment="center"
+                    android:layout_height="50dp"
+                    android:fontFamily="@font/bangers"
+                    android:text="Liar's Dice"
                     android:textColor="@color/common_google_signin_btn_text_dark_focused"
-                    android:textSize="30sp" />
+                    android:textSize="36sp" />
+
+                <ImageView
+                    android:id="@+id/img1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+                    android:adjustViewBounds="false"
+                    android:scaleType="centerInside"
+                    app:srcCompat="@mipmap/app_foreground" />
 
             </LinearLayout>
 
@@ -78,7 +67,8 @@
             android:id="@+id/message_to_send"
             android:layout_width="320dp"
             android:layout_height="wrap_content"
-            android:hint="@string/write_here" />
+            android:hint="@string/write_here"
+            />
         <ImageView
             android:id="@+id/picture"
             android:layout_width="40dp"
