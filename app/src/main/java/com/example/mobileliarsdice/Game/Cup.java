@@ -49,8 +49,20 @@ public class Cup {
 
     // Roll all dice inside the cup
     public void shake() {
-    	for (int i = 0; i < cup.size(); i++) {
-    		cup.get(i).roll();
+        if(cup.get(0).getFace() != 0) {
+            cup.get(0).roll();
+        }
+        if(cup.get(1).getFace() != 0) {
+            cup.get(1).roll();
+        }
+        if(cup.get(2).getFace() != 0) {
+            cup.get(2).roll();
+        }
+        if(cup.get(3).getFace() != 0) {
+            cup.get(3).roll();
+        }
+        if(cup.get(4).getFace() != 0) {
+            cup.get(4).roll();
         }
     }
 

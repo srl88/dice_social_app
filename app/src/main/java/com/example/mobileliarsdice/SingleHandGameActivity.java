@@ -41,6 +41,7 @@ public class SingleHandGameActivity extends AppCompatActivity {
     private String room_id;
     private String player_id;
     private boolean roomMaster;
+    private boolean ended;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +75,8 @@ public class SingleHandGameActivity extends AppCompatActivity {
         // Initialize
         bidFace = 0;
         bidNumber = 0;
+        ended = false;
+
 
         // Check if the player is room master
         intent = getIntent();
@@ -86,7 +89,6 @@ public class SingleHandGameActivity extends AppCompatActivity {
             // Create room with empty player2_id
             room = new SingleHandRooms(room_id, player_id, "", false, false, false, false, false, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 0, 0);
             database.child(room_id).setValue(room);
-
         } else {
             // Player 1 passes room id through invitation and
             // player 2 gets the room id by accepting invitation
@@ -109,6 +111,9 @@ public class SingleHandGameActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 boolean roomDataFound = false;
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if(ended) {
+                        break;
+                    }
                     SingleHandRooms roomSnapshot = snapshot.getValue(SingleHandRooms.class);
                     // If room with matching room_id was found
                     if(roomSnapshot.getRoom_id().equals(room_id)) {
@@ -147,10 +152,8 @@ public class SingleHandGameActivity extends AppCompatActivity {
                             }
 
                             // Once a challenge has been made
-                            if(roomSnapshot.isChallenged()) {
-                                sh_game.challenge(sh_game.getTurn());
+                            if(roomSnapshot.isChallenged() && roomSnapshot.getRoundWinner() == 0) {
                                 database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS").child(room_id).child("roundWinner");
-                                database.setValue(1);
                                 if(sh_game.challenge(sh_game.getTurn())) {
                                     if(sh_game.getTurn().getName().equals("Player1")) {
                                         database.setValue(1);
@@ -248,28 +251,28 @@ public class SingleHandGameActivity extends AppCompatActivity {
                                     diceID = getResources().getIdentifier("face" + roomSnapshot.getPlayer1_die2(), "drawable", getPackageName());
                                     secondDiceImage.setImageResource(diceID);
                                 } else {
-                                    firstDiceImage.setVisibility(View.INVISIBLE);
+                                    secondDiceImage.setVisibility(View.INVISIBLE);
                                 }
                                 if (roomSnapshot.getPlayer1_die3() != 0) {
                                     thirdDiceImage.setVisibility(View.VISIBLE);
                                     diceID = getResources().getIdentifier("face" + roomSnapshot.getPlayer1_die3(), "drawable", getPackageName());
                                     thirdDiceImage.setImageResource(diceID);
                                 } else {
-                                    firstDiceImage.setVisibility(View.INVISIBLE);
+                                    thirdDiceImage.setVisibility(View.INVISIBLE);
                                 }
                                 if (roomSnapshot.getPlayer1_die4() != 0) {
                                     fourthDiceImage.setVisibility(View.VISIBLE);
                                     diceID = getResources().getIdentifier("face" + roomSnapshot.getPlayer1_die4(), "drawable", getPackageName());
                                     fourthDiceImage.setImageResource(diceID);
                                 } else {
-                                    firstDiceImage.setVisibility(View.INVISIBLE);
+                                    fourthDiceImage.setVisibility(View.INVISIBLE);
                                 }
                                 if (roomSnapshot.getPlayer1_die5() != 0) {
                                     fifthDiceImage.setVisibility(View.VISIBLE);
                                     diceID = getResources().getIdentifier("face" + roomSnapshot.getPlayer1_die5(), "drawable", getPackageName());
                                     fifthDiceImage.setImageResource(diceID);
                                 } else {
-                                    firstDiceImage.setVisibility(View.INVISIBLE);
+                                    fifthDiceImage.setVisibility(View.INVISIBLE);
                                 }
                             } else {
                                 if (roomSnapshot.getPlayer2_die1() != 0) {
@@ -284,40 +287,65 @@ public class SingleHandGameActivity extends AppCompatActivity {
                                     diceID = getResources().getIdentifier("face" + roomSnapshot.getPlayer2_die2(), "drawable", getPackageName());
                                     secondDiceImage.setImageResource(diceID);
                                 } else {
-                                    firstDiceImage.setVisibility(View.INVISIBLE);
+                                    secondDiceImage.setVisibility(View.INVISIBLE);
                                 }
                                 if (roomSnapshot.getPlayer2_die3() != 0) {
                                     thirdDiceImage.setVisibility(View.VISIBLE);
                                     diceID = getResources().getIdentifier("face" + roomSnapshot.getPlayer2_die3(), "drawable", getPackageName());
                                     thirdDiceImage.setImageResource(diceID);
                                 } else {
-                                    firstDiceImage.setVisibility(View.INVISIBLE);
+                                    thirdDiceImage.setVisibility(View.INVISIBLE);
                                 }
                                 if (roomSnapshot.getPlayer2_die4() != 0) {
                                     fourthDiceImage.setVisibility(View.VISIBLE);
                                     diceID = getResources().getIdentifier("face" + roomSnapshot.getPlayer2_die4(), "drawable", getPackageName());
                                     fourthDiceImage.setImageResource(diceID);
                                 } else {
-                                    firstDiceImage.setVisibility(View.INVISIBLE);
+                                    fourthDiceImage.setVisibility(View.INVISIBLE);
                                 }
                                 if (roomSnapshot.getPlayer2_die5() != 0) {
                                     fifthDiceImage.setVisibility(View.VISIBLE);
                                     diceID = getResources().getIdentifier("face" + roomSnapshot.getPlayer2_die5(), "drawable", getPackageName());
                                     fifthDiceImage.setImageResource(diceID);
                                 } else {
-                                    firstDiceImage.setVisibility(View.INVISIBLE);
+                                    fifthDiceImage.setVisibility(View.INVISIBLE);
                                 }
+                            }
+
+                            // If one of the player has no dice, all dice values = 0
+                            if(!ended && roomSnapshot.getPlayer1_die1() == 0 && roomSnapshot.getPlayer1_die2() == 0 && roomSnapshot.getPlayer1_die3() == 0 && roomSnapshot.getPlayer1_die4() == 0 && roomSnapshot.getPlayer1_die5() == 0) {
+                                if(roomMaster) {
+                                    Toast.makeText(SingleHandGameActivity.this, "You have lost the game!", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(SingleHandGameActivity.this, "You have won the game!", Toast.LENGTH_SHORT).show();
+                                }
+                                database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS").child(room_id).child("player1_id");
+                                database.setValue("");
+                                database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS").child(room_id).child("player2_id");
+                                database.setValue("");
+                                ended = true;
+                            } else if(!ended && roomSnapshot.getPlayer2_die1() == 0 && roomSnapshot.getPlayer2_die2() == 0 && roomSnapshot.getPlayer2_die3() == 0 && roomSnapshot.getPlayer2_die4() == 0 && roomSnapshot.getPlayer2_die5() == 0) {
+                                if(roomMaster) {
+                                    Toast.makeText(SingleHandGameActivity.this, "You have won the game!", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(SingleHandGameActivity.this, "You have lost the game!", Toast.LENGTH_SHORT).show();
+                                }
+                                database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS").child(room_id).child("player1_id");
+                                database.setValue("");
+                                database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS").child(room_id).child("player2_id");
+                                database.setValue("");
+                                ended = true;
                             }
 
                             // Once a player has challenged another player
                             if(roomSnapshot.isChallenged()) {
-                                if (roomMaster && roomSnapshot.getRoundWinner() == 1) {
+                                if(roomMaster && roomSnapshot.getRoundWinner() == 1) {
                                     Toast.makeText(SingleHandGameActivity.this, "You have won the round!", Toast.LENGTH_SHORT).show();
-                                } else if (roomMaster && roomSnapshot.getRoundWinner() == 2) {
+                                } else if(roomMaster && roomSnapshot.getRoundWinner() == 2) {
                                     Toast.makeText(SingleHandGameActivity.this, "You have lost the round!", Toast.LENGTH_SHORT).show();
-                                } else if (!roomMaster && roomSnapshot.getRoundWinner() == 2) {
+                                } else if(!roomMaster && roomSnapshot.getRoundWinner() == 2) {
                                     Toast.makeText(SingleHandGameActivity.this, "You have won the round!", Toast.LENGTH_SHORT).show();
-                                } else if (!roomMaster && roomSnapshot.getRoundWinner() == 1) {
+                                } else if(!roomMaster && roomSnapshot.getRoundWinner() == 1) {
                                     Toast.makeText(SingleHandGameActivity.this, "You have lost the round!", Toast.LENGTH_SHORT).show();
                                 }
                                 // Reset values
@@ -329,9 +357,7 @@ public class SingleHandGameActivity extends AppCompatActivity {
                         }
 
                         // Once a round has ended
-                        if(roomMaster && roomSnapshot.isStarted() && roomSnapshot.isChallenged()) {
-                            // Start new round and reset game values
-                            sh_game.start();
+                        if(roomMaster && roomSnapshot.isStarted() && roomSnapshot.getRoundWinner() != 0) {
                             database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS").child(room_id).child("bidded");
                             database.setValue(false);
                             database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS").child(room_id).child("challenged");
@@ -344,15 +370,27 @@ public class SingleHandGameActivity extends AppCompatActivity {
                             database.setValue(0);
                             database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS").child(room_id).child("bid_number");
                             database.setValue(0);
+                            // Start a new round
+                            sh_game.start();
                         }
+
                         break;
                     }
                 }
-                // If one of the player has quit and the data was destroyed
+                // If the game has ended, destroy the game data
+                if(ended) {
+                    database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS").child(room_id);
+                    database.removeValue();
+                }
+                // If the game data was destroyed
                 if(!roomDataFound) {
                     // Disable all the buttons except for leave button for the remaining player
-                    currentTurn.setText("Your opponent has left the room.");
-                    currentTurn.setText("");
+                    if(ended) {
+                        currentTurn.setText("The game has ended.");
+                    } else {
+                        currentTurn.setText("Your opponent has left.");
+                    }
+                    currentBid.setText("");
                     firstDiceImage.setVisibility(View.INVISIBLE);
                     secondDiceImage.setVisibility(View.INVISIBLE);
                     thirdDiceImage.setVisibility(View.INVISIBLE);
