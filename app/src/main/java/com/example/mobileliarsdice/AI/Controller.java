@@ -38,13 +38,6 @@ public class Controller {
     private static List<CPUPlayer> p(){
         List<CPUPlayer> p=new ArrayList<CPUPlayer>();
         p.add(new Nobody());
-        /*p.add(new MostlyHonestAbe());
-        p.add(new Pirate());
-        p.add(new Fidelio());
-        p.add(new AbsurdBot());
-        p.add(new Statistician());
-        p.add(new DrHouse());
-        p.add(new StraightShooter());*/
         return p;
     }
 
