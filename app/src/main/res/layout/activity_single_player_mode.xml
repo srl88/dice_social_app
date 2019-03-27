@@ -2,13 +2,13 @@
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".SingleHandGameActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
     android:paddingBottom="10dp"
-    android:paddingTop="10dp">
+    android:paddingTop="10dp"
+    tools:context=".SinglePlayerModeActivity">
     <TableRow
         android:layout_width="match_parent"
         android:layout_height="50dp">
@@ -17,19 +17,6 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:text="" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="right">
-
-            <ImageView
-                android:id="@+id/inGameChat"
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:src="@drawable/chat"
-                android:onClick="onClick"/>
-        </RelativeLayout>
     </TableRow>
 
     <TableRow
