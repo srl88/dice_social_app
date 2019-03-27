@@ -67,12 +67,13 @@ public class Location_fragment extends Fragment {
                 for(DataSnapshot c: dataSnapshot.getChildren()){
                     Users temp = c.getValue(Users.class);
                     if(UserGlobals.mUser!=null && temp!=null){
-                        if(!UserGlobals.mUser.getId().equals(temp.getId())&&temp.getOnline()){
+                        if((!UserGlobals.mUser.getId().equals(temp.getId())&&temp.getOnline())&&temp.getPlayingWithId().equals("NONE")){
                             //check location!
                             float[] results = new float[3];
                             Location.distanceBetween(UserGlobals.mUser.getLatitude(), UserGlobals.mUser.getLongitude(),
                                     temp.getLatitude(), temp.getLongitude(), results);
                             // make sure that the distances agree!
+
                             if(results[0]<=UserGlobals.mUser.getDistance()&&results[0]<=temp.getDistance()){
                                 allUsers.add(temp);
                             }
