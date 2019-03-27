@@ -306,5 +306,4 @@ public class MessageActivity extends AppCompatActivity {
             });
         }
     }
-
 }

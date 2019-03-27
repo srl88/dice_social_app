@@ -112,9 +112,11 @@ public class SingleHandGame {
         }
         if (count < bidNumber) {
         	cups.get((players.indexOf(challenger) + 1) % numberOfPlayers).takeOut();
+        	// Challenger wins
             return true;
         } else {
         	cups.get(players.indexOf(challenger)).takeOut();
+        	// Challenger loses
             return false;
         }
     }
