@@ -3,27 +3,27 @@ package com.example.mobileliarsdice.Game;
 import java.util.ArrayList;
 
 /**
- * Created by Sung Won Caleb Bhyun
+ * Created by Philibert ADAM
+ *
+ *
  */
 
-public class Player {
+public class CPUPlayer extends Player {
     // Attributes
     private String name;
 
     // Constructor
-    public Player(String name) {
-        this.name = name;
+    public CPUPlayer(String name) {
+        super("cpu");
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String toString() {
-        return "name: " + name;
-    }
-
-    public String computeHand(ArrayList<Cup> cups, int index, int numberOfPlayers, ArrayList<String> bids) {
+    /**main function for bidding
+     *
+     * @param cups
+     * @param index
+     * @return n
+     */
+    public String computeHand(ArrayList<Cup> cups, int index, int numberOfPlayers, String[] bids) {
         int[] dieCounts = new int[7];
 
         for(int i=0;i<cups.get(index).getDiceNumber();i++) {
@@ -33,9 +33,9 @@ public class Player {
         for(int i=2; i<7; i++)
             dieCounts[i] += dieCounts[1];
 
-        if(bids.size() > 0)
+        if(bids.length > 0)
         {
-            String[] lastBid = bids.get(bids.size() - 1).split(" ");
+            String[] lastBid = bids[bids.length - 1].split(" ");
             int bidCount = Integer.valueOf(lastBid[0]);
             int bidDie = Integer.valueOf(lastBid[1]);
 
@@ -140,6 +140,4 @@ public class Player {
             dfact = dfact * i;
         return (nfact/dfact)*(Math.pow((1.0/3), k))*Math.pow(2.0/3, (n-k));
     }
-
 }
-
