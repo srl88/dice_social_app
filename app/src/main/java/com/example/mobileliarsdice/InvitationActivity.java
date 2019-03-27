@@ -123,6 +123,8 @@ public class InvitationActivity extends AppCompatActivity {
                     if(timer!=null){
                         timer.cancel();
                     }
+
+                    String room_id = Utilities.createMessageKey(invitation.getId_1(), invitation.getId_2());
                     //TODO: LAUNCH GAME ACTIVITY
                 }
                 else if(!invitation.getAccepted1()&&!invitation.getAccepted2()){
