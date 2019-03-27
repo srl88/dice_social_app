@@ -211,6 +211,10 @@ public class Settings_fragment extends Fragment{
             }
         });
 
+        /**
+         * Set the seekbat to its initial value
+         */
+
         return rootView;
     }
 
@@ -290,6 +294,7 @@ public class Settings_fragment extends Fragment{
         user_name.setText(UserGlobals.mUser.getUserName());
         user_distance.setText(UserGlobals.mUser.getDistance()+" Km ");
         imageByte = null;
+        distanceBar.setProgress(current_selected_distance);
         loadImageToView();
     }
 
