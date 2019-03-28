@@ -1,6 +1,11 @@
 package com.example.mobileliarsdice;
 
         import android.content.Intent;
+        import android.media.AudioAttributes;
+        import android.media.SoundPool;
+        import android.os.Build;
+        import android.os.Handler;
+        import android.os.Message;
         import android.support.v7.app.AppCompatActivity;
         import android.os.Bundle;
         import android.view.View;
@@ -14,6 +19,8 @@ package com.example.mobileliarsdice;
 
         import java.util.ArrayList;
         import java.util.List;
+        import java.util.Timer;
+        import java.util.TimerTask;
 
 public class SinglePlayerModeActivity extends AppCompatActivity {
     private Intent intent;
@@ -22,6 +29,14 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
     private TextView lblCurrentTurn, lblCurrentBid, currentTurn, currentBid;
     private ImageView firstDiceImage, secondDiceImage, thirdDiceImage, fourthDiceImage, fifthDiceImage;
     private Button readyButton, quitButton, bidButton, challengeButton;
+
+    SoundPool dice_sound;       //For dice sound playing
+    int sound_id;               //Used to control sound stream return by SoundPool
+    Timer timer=new Timer();    //Used to implement feedback to user
+    boolean rolling=false;      //Is die rolling?
+    Handler handler;
+
+
 
     private int diceID;
     private int bidFace, bidNumber;
@@ -36,6 +51,11 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_player_mode);
+
+        InitSound();
+
+        //link handler to callback
+        handler=new Handler(callback);
 
         lblCurrentTurn = findViewById(R.id.lblCurrentTurn);
         lblCurrentBid = findViewById(R.id.lblCurrentBid);
@@ -150,38 +170,73 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
     }
 
     public void updateDiceImages() {
+        rolling = true;
+        //Start rolling sound
+        dice_sound.play(sound_id, 1.0f, 1.0f, 0, 0, 1.0f);
+
         if(sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().size() >= 1) {
             firstDiceImage.setVisibility(View.VISIBLE);
-            diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(0).getFace(), "drawable", getPackageName());
-            firstDiceImage.setImageResource(diceID);
+            firstDiceImage.setImageResource(R.drawable.dice3droll);
+            //Pause to allow image to update
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(0).getFace(), "drawable", getPackageName());
+                    firstDiceImage.setImageResource(diceID);
+                }
+            }, 400);
         } else {
             firstDiceImage.setVisibility(View.INVISIBLE);
         }
         if(sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().size() >= 2) {
             secondDiceImage.setVisibility(View.VISIBLE);
-            diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(1).getFace(), "drawable", getPackageName());
-            secondDiceImage.setImageResource(diceID);
+            secondDiceImage.setImageResource(R.drawable.dice3droll);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(1).getFace(), "drawable", getPackageName());
+                    secondDiceImage.setImageResource(diceID);
+                }
+            }, 400);
         } else {
             secondDiceImage.setVisibility(View.INVISIBLE);
         }
         if(sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().size() >= 3) {
             thirdDiceImage.setVisibility(View.VISIBLE);
-            diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(2).getFace(), "drawable", getPackageName());
-            thirdDiceImage.setImageResource(diceID);
+            thirdDiceImage.setImageResource(R.drawable.dice3droll);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(2).getFace(), "drawable", getPackageName());
+                    thirdDiceImage.setImageResource(diceID);
+                }
+            }, 400);
         } else {
             thirdDiceImage.setVisibility(View.INVISIBLE);
         }
         if(sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().size() >= 4) {
             fourthDiceImage.setVisibility(View.VISIBLE);
-            diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(3).getFace(), "drawable", getPackageName());
-            fourthDiceImage.setImageResource(diceID);
+            fourthDiceImage.setImageResource(R.drawable.dice3droll);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(3).getFace(), "drawable", getPackageName());
+                    fourthDiceImage.setImageResource(diceID);
+                }
+            }, 400);
         } else {
             fourthDiceImage.setVisibility(View.INVISIBLE);
         }
         if(sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().size() >= 5) {
             fifthDiceImage.setVisibility(View.VISIBLE);
-            diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(4).getFace(), "drawable", getPackageName());
-            fifthDiceImage.setImageResource(diceID);
+            fifthDiceImage.setImageResource(R.drawable.dice3droll);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(4).getFace(), "drawable", getPackageName());
+                    fifthDiceImage.setImageResource(diceID);
+                }
+            }, 400);
         } else {
             fifthDiceImage.setVisibility(View.INVISIBLE);
         }
@@ -304,6 +359,40 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
         } else {
             // Automatically start next round
             startRound();
+        }
+    }
+
+    void InitSound() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            //uses builder pattern
+            AudioAttributes aa = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
+
+            //default max streams is 1
+            dice_sound= new SoundPool.Builder().setAudioAttributes(aa).build();
+
+        } else {
+            //Running on device earlier than Lollipop
+            dice_sound=PreLollipopSoundPool.NewSoundPool();
+        }
+        //Load the dice sound
+        sound_id=dice_sound.load(this,R.raw.shake_dice,1);
+    }
+
+    //Receives message from timer to start dice roll
+    Handler.Callback callback = new Handler.Callback() {
+        public boolean handleMessage(Message msg) {
+            rolling=false;  //user can press again
+            return true;
+        }
+    };
+
+            //When pause completed message sent to callback
+    class Roll extends TimerTask {
+        public void run() {
+            handler.sendEmptyMessage(0);
         }
     }
 }

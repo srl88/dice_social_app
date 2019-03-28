@@ -85,7 +85,7 @@ public class MessageActivity extends AppCompatActivity {
         //get ui components
         profileImage = findViewById(R.id.image_profile);
         profileName = findViewById(R.id.user_name);
-        back = findViewById(R.id.back_button);
+        //back = findViewById(R.id.back_button);
         send = findViewById(R.id.send_msg);
         sendMessage =  findViewById(R.id.message_to_send);
         image = findViewById(R.id.picture);

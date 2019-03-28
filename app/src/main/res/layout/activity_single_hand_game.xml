@@ -175,8 +175,9 @@
             android:fontFamily="@font/bangers"
             android:onClick="onClick"
             android:text="@string/quit_button" />
-    </TableRow>
+    </LinearLayout>
 
+    <LinearLayout>
         <Button
             android:id="@+id/bidButton"
             android:layout_width="200dp"

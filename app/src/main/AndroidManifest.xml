@@ -71,7 +71,8 @@
             android:theme="@style/AppTheme.PopupWindow" />
         <!-- SINGLE PLAYER MODE -->
         <activity android:name=".SinglePlayerModeActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="true">
         </activity>
     </application>
 
