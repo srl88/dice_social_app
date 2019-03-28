@@ -26,13 +26,12 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
     private Intent intent;
     private Bundle bundle;
 
-    private TextView lblCurrentTurn, lblCurrentBid, currentTurn, currentBid;
+    private TextView lblCurrentTurn, lblCurrentBid, lblNbDice, currentTurn, currentBid, nbDice;
     private ImageView firstDiceImage, secondDiceImage, thirdDiceImage, fourthDiceImage, fifthDiceImage;
     private Button readyButton, quitButton, bidButton, challengeButton;
 
     SoundPool dice_sound;       //For dice sound playing
-    int sound_id;               //Used to control sound stream return by SoundPool
-    Timer timer=new Timer();    //Used to implement feedback to user
+    int sound_id;               //Used to implement feedback to user
     boolean rolling=false;      //Is die rolling?
     Handler handler;
 
@@ -47,6 +46,9 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
     private Player player1;
     private Player player2;
 
+    int[] diceOf;
+    int nbDiceCPU;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,9 +61,11 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
 
         lblCurrentTurn = findViewById(R.id.lblCurrentTurn);
         lblCurrentBid = findViewById(R.id.lblCurrentBid);
+        lblNbDice = findViewById(R.id.lblNbDice);
 
         currentTurn = findViewById(R.id.currentTurn);
         currentBid = findViewById(R.id.currentBid);
+        nbDice = findViewById(R.id.NbDice);
 
         firstDiceImage = findViewById(R.id.firstDiceImage);
         secondDiceImage = findViewById(R.id.secondDiceImage);
@@ -78,6 +82,7 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
 
         lblCurrentTurn.setVisibility(View.INVISIBLE);
         lblCurrentBid.setVisibility(View.INVISIBLE);
+        lblNbDice.setVisibility(View.INVISIBLE);
 
         firstDiceImage.setVisibility(View.INVISIBLE);
         secondDiceImage.setVisibility(View.INVISIBLE);
@@ -90,6 +95,7 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
         // Initialize face and number
         bidFace = 0;
         bidNumber = 0;
+        diceOf = new int[5];
         listOfBids = new ArrayList<String>();
 
         // Add players
@@ -130,7 +136,9 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
 
                 lblCurrentTurn.setVisibility(View.VISIBLE);
                 lblCurrentBid.setVisibility(View.VISIBLE);
+                lblNbDice.setVisibility(View.VISIBLE);
                 currentTurn.setText(sh_game.getTurn().getName());
+
                 if(bidNumber == 0) {
                     currentBid.setText("");
                 } else {
@@ -170,6 +178,18 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
     }
 
     public void updateDiceImages() {
+        diceOf[0] = sh_game.getCups().get(1).getCup().get(0).getFace();
+        diceOf[1] = sh_game.getCups().get(1).getCup().get(1).getFace();
+        diceOf[2] = sh_game.getCups().get(1).getCup().get(2).getFace();
+        diceOf[3] = sh_game.getCups().get(1).getCup().get(3).getFace();
+        diceOf[4] = sh_game.getCups().get(1).getCup().get(4).getFace();
+        nbDiceCPU = 0;
+        for (int i=0; i<5; i++) {
+            if (diceOf[i]!=0) {
+                nbDiceCPU++;
+            }
+        }
+        nbDice.setText(Integer.toString(nbDiceCPU)) ;
         rolling = true;
         //Start rolling sound
         dice_sound.play(sound_id, 1.0f, 1.0f, 0, 0, 1.0f);
@@ -334,6 +354,7 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
             challengeButton.setEnabled(false);
             lblCurrentTurn.setVisibility(View.INVISIBLE);
             lblCurrentBid.setVisibility(View.INVISIBLE);
+            lblNbDice.setVisibility(View.INVISIBLE);
             firstDiceImage.setVisibility(View.INVISIBLE);
             secondDiceImage.setVisibility(View.INVISIBLE);
             thirdDiceImage.setVisibility(View.INVISIBLE);
@@ -349,6 +370,7 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
             challengeButton.setEnabled(false);
             lblCurrentTurn.setVisibility(View.INVISIBLE);
             lblCurrentBid.setVisibility(View.INVISIBLE);
+            lblNbDice.setVisibility(View.INVISIBLE);
             firstDiceImage.setVisibility(View.INVISIBLE);
             secondDiceImage.setVisibility(View.INVISIBLE);
             thirdDiceImage.setVisibility(View.INVISIBLE);

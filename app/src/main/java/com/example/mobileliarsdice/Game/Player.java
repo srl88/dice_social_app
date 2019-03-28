@@ -30,6 +30,7 @@ public class Player {
         for(int i=2; i<7; i++)
             dieCounts[i] += dieCounts[1];
 
+        dieCounts[0] = 0;
         if(bids.size() > 0)
         {
             String[] lastBid = bids.get(bids.size() - 1).split(" ");
