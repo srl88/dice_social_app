@@ -235,11 +235,12 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
         sh_game.start();
         Toast.makeText(getApplicationContext(),"A round has started.",Toast.LENGTH_SHORT).show();
         challengeButton.setEnabled(false);
+        
+        listOfBids.clear();
 
         // If first turn is cpu's turn
         if(sh_game.getTurn().getName().equals("cpu")) {
             challengeButton.setEnabled(true);
-            listOfBids.clear();
             String cpu_bid = sh_game.getPlayers().get(1).computeHand(sh_game.getCups(), 1, 2, listOfBids);
             System.out.println("CPU BID: " + cpu_bid);
             listOfBids.add(cpu_bid);
