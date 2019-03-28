@@ -111,9 +111,16 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
                 lblCurrentTurn.setVisibility(View.VISIBLE);
                 lblCurrentBid.setVisibility(View.VISIBLE);
                 currentTurn.setText(sh_game.getTurn().getName());
+                if(bidNumber == 0) {
+                    currentBid.setText("");
+                } else {
+                    currentBid.setText(sh_game.getBidFace() + " x" + sh_game.getBidNumber());
+                }
 
                 System.out.println(sh_game.getCups().get(0).toString());
                 System.out.println(sh_game.getCups().get(1).toString());
+
+                System.out.println("LIST OF BIDS: " + listOfBids.toString());
 
                 break;
 
@@ -232,6 +239,7 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
         // If first turn is cpu's turn
         if(sh_game.getTurn().getName().equals("cpu")) {
             challengeButton.setEnabled(true);
+            listOfBids.clear();
             String cpu_bid = sh_game.getPlayers().get(1).computeHand(sh_game.getCups(), 1, 2, listOfBids);
             System.out.println("CPU BID: " + cpu_bid);
             listOfBids.add(cpu_bid);
@@ -243,11 +251,17 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
         }
 
         currentTurn.setText(sh_game.getTurn().getName());
-        currentBid.setText("");
+        if(bidNumber == 0) {
+            currentBid.setText("");
+        } else {
+            currentBid.setText(sh_game.getBidFace() + " x" + sh_game.getBidNumber());
+        }
         bidButton.setEnabled(true);
 
         // Update dice images
         updateDiceImages();
+
+        System.out.println("LIST OF BIDS: " + listOfBids.toString());
     }
 
     public void endRound() {
@@ -255,7 +269,40 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
         // Reset values
         bidFace = 0;
         bidNumber = 0;
-        // Automatically start next round
-        startRound();
+
+        if(sh_game.getCups().get(0).getDiceNumber() == 0) {
+            Toast.makeText(getApplicationContext(),"You have lost the game against AI!",Toast.LENGTH_SHORT).show();
+            // Disable all except for leave button
+            readyButton.setEnabled(false);
+            bidButton.setEnabled(false);
+            challengeButton.setEnabled(false);
+            lblCurrentTurn.setVisibility(View.INVISIBLE);
+            lblCurrentBid.setVisibility(View.INVISIBLE);
+            firstDiceImage.setVisibility(View.INVISIBLE);
+            secondDiceImage.setVisibility(View.INVISIBLE);
+            thirdDiceImage.setVisibility(View.INVISIBLE);
+            fourthDiceImage.setVisibility(View.INVISIBLE);
+            fifthDiceImage.setVisibility(View.INVISIBLE);
+            currentTurn.setText("You have lost the game.");
+            currentBid.setVisibility(View.INVISIBLE);
+        } else if(sh_game.getCups().get(1).getDiceNumber() == 0) {
+            Toast.makeText(getApplicationContext(),"You have won the game against AI!.",Toast.LENGTH_SHORT).show();
+            // Disable all except for leave button
+            readyButton.setEnabled(false);
+            bidButton.setEnabled(false);
+            challengeButton.setEnabled(false);
+            lblCurrentTurn.setVisibility(View.INVISIBLE);
+            lblCurrentBid.setVisibility(View.INVISIBLE);
+            firstDiceImage.setVisibility(View.INVISIBLE);
+            secondDiceImage.setVisibility(View.INVISIBLE);
+            thirdDiceImage.setVisibility(View.INVISIBLE);
+            fourthDiceImage.setVisibility(View.INVISIBLE);
+            fifthDiceImage.setVisibility(View.INVISIBLE);
+            currentTurn.setText("You have won the game.");
+            currentBid.setVisibility(View.INVISIBLE);
+        } else {
+            // Automatically start next round
+            startRound();
+        }
     }
 }
