@@ -5,9 +5,8 @@
     android:id="@+id/layoutMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/app_background"
     tools:context=".loginActivity"
-    android:fitsSystemWindows="true">>
+    android:fitsSystemWindows="true">
 
     <ImageView
         android:id="@+id/imageView"
@@ -20,7 +19,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/dice_logo_round" />
+        app:srcCompat="@mipmap/app_foreground" />
 
     <TextView
         android:id="@+id/textView"
