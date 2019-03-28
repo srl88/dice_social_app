@@ -142,8 +142,13 @@ public class InvitationActivity extends AppCompatActivity {
                         database.child(room_id).setValue(room);
                         startActivity(intent);
                         intent.putExtra("room_id", room_id);
-                        endActivity2();
+                        // Prevent BidWindow from opening twice
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
+                        endActivity2();
                     } else {
                         intent.putExtra("roomMaster", false);
                         intent.putExtra("player_id", "player2_id");
@@ -153,17 +158,16 @@ public class InvitationActivity extends AppCompatActivity {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                endActivity2();
+                                // Prevent BidWindow from opening twice
+                                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
+                                endActivity2();
                             }
                         }, 1000);
                     }
-                    //intent.putExtra("room_id", room_id);
-                    //endActivity2();
-                    //startActivity(intent);
-                    // Destroy ROOM when both player joins the game room
-                    //database = FirebaseDatabase.getInstance().getReference("ROOMS").child(room_id);
-                    //database.removeValue();
                 }
                 else if(!invitation.getAccepted1()&&!invitation.getAccepted2()){
                     //Invitation was rejected so exit!

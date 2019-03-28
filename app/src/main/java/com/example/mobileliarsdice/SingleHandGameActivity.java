@@ -427,9 +427,13 @@ public class SingleHandGameActivity extends AppCompatActivity {
         leave = true;
         database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS").child(room_id);
         database.removeValue();
-        intent = new Intent(this, loginActivity.class);
+        intent = new Intent(this, loginActivity.class);// Prevent BidWindow from opening twice
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
-        //finish();
+        this.finish();
     }
 
     public void onClick(View view) {
@@ -475,8 +479,13 @@ public class SingleHandGameActivity extends AppCompatActivity {
                 database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS").child(room_id);
                 database.removeValue();
                 intent = new Intent(this, loginActivity.class);
+                // Prevent BidWindow from opening twice
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                this.finish();
                 startActivity(intent);
-                //finish();
                 break;
 
             case R.id.bidButton:
