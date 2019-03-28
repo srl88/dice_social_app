@@ -2,6 +2,7 @@ package com.example.mobileliarsdice;
 
 import android.content.Intent;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import com.example.mobileliarsdice.Models.Rooms;
@@ -137,16 +139,31 @@ public class InvitationActivity extends AppCompatActivity {
                         intent.putExtra("player_id", "player1_id");
                         database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS");
                         SingleHandRooms room = new SingleHandRooms(room_id, "player1_id", "", false, false, false, false, false, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 0, 0);
+                        database.child(room_id).setValue(room);
+                        startActivity(intent);
+                        intent.putExtra("room_id", room_id);
+                        endActivity2();
                         startActivity(intent);
                     } else {
                         intent.putExtra("roomMaster", false);
                         intent.putExtra("player_id", "player2_id");
+                        intent.putExtra("room_id", room_id);
+                        Toast.makeText(InvitationActivity.this, "Waiting for room creation..", Toast.LENGTH_SHORT).show();
+                        // Player 2 waits 1 second for room creation
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                endActivity2();
+                                startActivity(intent);
+                            }
+                        }, 1000);
                     }
-                    intent.putExtra("room_id", room_id);
+                    //intent.putExtra("room_id", room_id);
+                    //endActivity2();
+                    //startActivity(intent);
                     // Destroy ROOM when both player joins the game room
-                    database = FirebaseDatabase.getInstance().getReference("ROOMS").child(friend_id);
-                    database.removeValue();
-                    startActivity(intent);
+                    //database = FirebaseDatabase.getInstance().getReference("ROOMS").child(room_id);
+                    //database.removeValue();
                 }
                 else if(!invitation.getAccepted1()&&!invitation.getAccepted2()){
                     //Invitation was rejected so exit!

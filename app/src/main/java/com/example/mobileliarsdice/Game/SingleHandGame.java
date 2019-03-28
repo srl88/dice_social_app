@@ -82,7 +82,6 @@ public class SingleHandGame {
         }
         // First player's turn
         turn = firstPlayer;
-        turn = players.get(1);
     }
 
     public void endTurn() {
@@ -90,7 +89,6 @@ public class SingleHandGame {
     }
 
     public boolean bid(int face, int number) {
-        System.out.println("CPU BIDDED");
         if (bidFace == 0 && bidNumber == 0) {
             bidFace = face;
             bidNumber = number;
@@ -115,14 +113,10 @@ public class SingleHandGame {
         if (count < bidNumber) {
             cups.get((players.indexOf(challenger) + 1) % numberOfPlayers).takeOut();
             // Challenger wins
-            System.out.println("C Player1: " + cups.get(0).toString());
-            System.out.println("C Player2: " + cups.get(1).toString());
             return true;
         } else {
             cups.get(players.indexOf(challenger)).takeOut();
             // Challenger loses
-            System.out.println("C Player1: " + cups.get(0).toString());
-            System.out.println("C Player2: " + cups.get(1).toString());
             return false;
         }
     }

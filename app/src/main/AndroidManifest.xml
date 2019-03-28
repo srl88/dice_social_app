@@ -51,10 +51,6 @@
             android:name=".loginActivity"
             android:label="Liar&apos;s Dice"
             android:noHistory="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <!-- COMMON HAND GAME -->
         <activity android:name=".CommonHandGameActivity"
@@ -72,6 +68,10 @@
         <!-- SINGLE PLAYER MODE -->
         <activity android:name=".SinglePlayerModeActivity"
             android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

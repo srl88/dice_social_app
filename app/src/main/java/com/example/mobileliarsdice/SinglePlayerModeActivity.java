@@ -19,7 +19,7 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
     private Intent intent;
     private Bundle bundle;
 
-    private TextView currentTurn, currentBid;
+    private TextView lblCurrentTurn, lblCurrentBid, currentTurn, currentBid;
     private ImageView firstDiceImage, secondDiceImage, thirdDiceImage, fourthDiceImage, fifthDiceImage;
     private Button readyButton, quitButton, bidButton, challengeButton;
 
@@ -37,6 +37,9 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_player_mode);
 
+        lblCurrentTurn = findViewById(R.id.lblCurrentTurn);
+        lblCurrentBid = findViewById(R.id.lblCurrentBid);
+
         currentTurn = findViewById(R.id.currentTurn);
         currentBid = findViewById(R.id.currentBid);
 
@@ -51,7 +54,10 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
         bidButton = findViewById(R.id.bidButton);
         challengeButton = findViewById(R.id.challengeButton);
 
-        readyButton.setText("READY");
+        readyButton.setText("START");
+
+        lblCurrentTurn.setVisibility(View.INVISIBLE);
+        lblCurrentBid.setVisibility(View.INVISIBLE);
 
         firstDiceImage.setVisibility(View.INVISIBLE);
         secondDiceImage.setVisibility(View.INVISIBLE);
@@ -82,22 +88,32 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
                 // If all players are ready start the game
                 sh_game.start();
                 Toast.makeText(getApplicationContext(),"The game has started.",Toast.LENGTH_SHORT).show();
+                readyButton.setBackgroundColor(getResources().getColor(R.color.colorGray,getResources().newTheme()));
                 readyButton.setEnabled(false);
                 bidButton.setEnabled(true);
-                // Update dice images
-                updateDiceImages();
 
+                // If first turn is cpu's turn
                 if(sh_game.getTurn().getName().equals("cpu")) {
                     String cpu_bid = sh_game.getPlayers().get(1).computeHand(sh_game.getCups(), 1, 2, listOfBids);
-                    System.out.println(Integer.valueOf(cpu_bid.substring(2,3)) + "----" + Integer.valueOf(cpu_bid.substring(0,1)));
+                    System.out.println("CPU BID: " + cpu_bid);
                     listOfBids.add(cpu_bid);
                     bidFace = Integer.valueOf(cpu_bid.substring(0,1));
                     bidNumber = Integer.valueOf(cpu_bid.substring(2,3));
 
                     sh_game.bid(Integer.valueOf(cpu_bid.substring(2,3)), Integer.valueOf(cpu_bid.substring(0,1)));
                     sh_game.endTurn();
+                    challengeButton.setEnabled(true);
                 }
+
+                // Update dice images
+                updateDiceImages();
+
+                lblCurrentTurn.setVisibility(View.VISIBLE);
+                lblCurrentBid.setVisibility(View.VISIBLE);
                 currentTurn.setText(sh_game.getTurn().getName());
+
+                System.out.println(sh_game.getCups().get(0).toString());
+                System.out.println(sh_game.getCups().get(1).toString());
 
                 break;
 
@@ -159,7 +175,6 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
             fifthDiceImage.setVisibility(View.VISIBLE);
             diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(4).getFace(), "drawable", getPackageName());
             fifthDiceImage.setImageResource(diceID);
-            System.out.println(sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().toString());
         } else {
             fifthDiceImage.setVisibility(View.INVISIBLE);
         }
@@ -180,7 +195,6 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
 
                 sh_game.bid(bidFace, bidNumber);
                 sh_game.endTurn();
-                updateDiceImages();
 
                 // Maximum bid; next play can only challenge
                 if(bidNumber == 10) {
@@ -198,9 +212,12 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
                     listOfBids.add(cpu_bid);
                     bidFace = Integer.valueOf(cpu_bid.substring(0,1));
                     bidNumber = Integer.valueOf(cpu_bid.substring(2,3));
+                    System.out.println("CPU BID: " + cpu_bid);
                     sh_game.bid(Integer.valueOf(cpu_bid.substring(2,3)), Integer.valueOf(cpu_bid.substring(0,1)));
                     sh_game.endTurn();
                 }
+
+                updateDiceImages();
                 currentTurn.setText(sh_game.getTurn().getName());
                 currentBid.setText(sh_game.getBidFace() + " x" + sh_game.getBidNumber());
             }
@@ -210,11 +227,25 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
     public void startRound() {
         sh_game.start();
         Toast.makeText(getApplicationContext(),"A round has started.",Toast.LENGTH_SHORT).show();
+        challengeButton.setEnabled(false);
+
+        // If first turn is cpu's turn
+        if(sh_game.getTurn().getName().equals("cpu")) {
+            challengeButton.setEnabled(true);
+            String cpu_bid = sh_game.getPlayers().get(1).computeHand(sh_game.getCups(), 1, 2, listOfBids);
+            System.out.println("CPU BID: " + cpu_bid);
+            listOfBids.add(cpu_bid);
+            bidFace = Integer.valueOf(cpu_bid.substring(0,1));
+            bidNumber = Integer.valueOf(cpu_bid.substring(2,3));
+
+            sh_game.bid(Integer.valueOf(cpu_bid.substring(2,3)), Integer.valueOf(cpu_bid.substring(0,1)));
+            sh_game.endTurn();
+        }
+
         currentTurn.setText(sh_game.getTurn().getName());
         currentBid.setText("");
-        // Database ROOMS: set turn = ch_game.getTurn().getName()
         bidButton.setEnabled(true);
-        challengeButton.setEnabled(false);
+
         // Update dice images
         updateDiceImages();
     }
