@@ -14,18 +14,22 @@ import android.widget.TextView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import com.example.mobileliarsdice.Models.Rooms;
+import com.example.mobileliarsdice.Models.SingleHandRooms;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 public class InvitationActivity extends AppCompatActivity {
 
     public String type;
+    private DatabaseReference database;
+    private Intent intent;
     Button acceptBtn;
     Button rejectBtn;
     Button cancelBtn;
@@ -57,6 +61,9 @@ public class InvitationActivity extends AppCompatActivity {
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
 
+        // Set intent to single hand game activity
+        intent = new Intent(this, SingleHandGameActivity.class);
+
         int width = dm.widthPixels;
         int height = dm.heightPixels;
         getWindow().setLayout((int)(width*.8), (int)(height*.6));
@@ -71,10 +78,10 @@ public class InvitationActivity extends AppCompatActivity {
         //Create a room object based on who is the chalanger
         if(UserGlobals.isChallanger){
             invitation = new Rooms(UserGlobals.mUser.getId(), friend_id, UserGlobals.mUser.getUserName(),friend_name,false, false,
-                     UserGlobals.mUser.getUrl(), friend_URL);
+                    UserGlobals.mUser.getUrl(), friend_URL);
         }else{
             invitation = new Rooms(friend_id,UserGlobals.mUser.getId(), friend_name,UserGlobals.mUser.getUserName(),false, false,
-                     friend_URL, UserGlobals.mUser.getUrl());
+                    friend_URL, UserGlobals.mUser.getUrl());
         }
 
         //update the Image
@@ -123,9 +130,23 @@ public class InvitationActivity extends AppCompatActivity {
                     if(timer!=null){
                         timer.cancel();
                     }
-
                     String room_id = Utilities.createMessageKey(invitation.getId_1(), invitation.getId_2());
-                    //TODO: LAUNCH GAME ACTIVITY
+                    // Start game
+                    if(UserGlobals.isChallanger) {
+                        intent.putExtra("roomMaster", true);
+                        intent.putExtra("player_id", "player1_id");
+                        database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS");
+                        SingleHandRooms room = new SingleHandRooms(room_id, "player1_id", "", false, false, false, false, false, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 0, 0);
+                        startActivity(intent);
+                    } else {
+                        intent.putExtra("roomMaster", false);
+                        intent.putExtra("player_id", "player2_id");
+                    }
+                    intent.putExtra("room_id", room_id);
+                    // Destroy ROOM when both player joins the game room
+                    database = FirebaseDatabase.getInstance().getReference("ROOMS").child(friend_id);
+                    database.removeValue();
+                    startActivity(intent);
                 }
                 else if(!invitation.getAccepted1()&&!invitation.getAccepted2()){
                     //Invitation was rejected so exit!

@@ -9,7 +9,6 @@ package com.example.mobileliarsdice;
         import android.widget.TextView;
         import android.widget.Toast;
 
-        import com.example.mobileliarsdice.Game.CPUPlayer;
         import com.example.mobileliarsdice.Game.SingleHandGame;
         import com.example.mobileliarsdice.Game.Player;
 
@@ -74,8 +73,6 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
         players.add(player1);
         players.add(player2);
 
-        System.out.println("SIZE: " + listOfBids.size());
-
         sh_game = new SingleHandGame(players);
     }
 
@@ -130,7 +127,6 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
     }
 
     public void updateDiceImages() {
-        Toast.makeText(getApplicationContext(),"Size: " + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().size(),Toast.LENGTH_SHORT).show();
         if(sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().size() >= 1) {
             firstDiceImage.setVisibility(View.VISIBLE);
             diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(0).getFace(), "drawable", getPackageName());

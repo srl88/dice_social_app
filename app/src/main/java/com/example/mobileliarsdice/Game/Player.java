@@ -2,10 +2,6 @@ package com.example.mobileliarsdice.Game;
 
 import java.util.ArrayList;
 
-/**
- * Created by Sung Won Caleb Bhyun
- */
-
 public class Player {
     // Attributes
     private String name;
@@ -131,4 +127,3 @@ public class Player {
     }
 
 }
-

@@ -92,10 +92,11 @@ public class SingleHandGameActivity extends AppCompatActivity {
         if(roomMaster == true) {
             // Create room on database
             database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS");
-            room_id = database.push().getKey();
+            room_id = intent.getStringExtra("room_id");
+            //room_id = database.push().getKey();
             // Create room with empty player2_id
-            room = new SingleHandRooms(room_id, player_id, "", false, false, false, false, false, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 0, 0);
-            database.child(room_id).setValue(room);
+            //room = new SingleHandRooms(room_id, player_id, "", false, false, false, false, false, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 0, 0);
+            //database.child(room_id).setValue(room);
         } else {
             // Player 1 passes room id through invitation and
             // player 2 gets the room id by accepting invitation
@@ -426,7 +427,9 @@ public class SingleHandGameActivity extends AppCompatActivity {
         leave = true;
         database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS").child(room_id);
         database.removeValue();
-        finish();
+        intent = new Intent(this, loginActivity.class);
+        startActivity(intent);
+        //finish();
     }
 
     public void onClick(View view) {
@@ -471,7 +474,9 @@ public class SingleHandGameActivity extends AppCompatActivity {
                 leave = true;
                 database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS").child(room_id);
                 database.removeValue();
-                finish();
+                intent = new Intent(this, loginActivity.class);
+                startActivity(intent);
+                //finish();
                 break;
 
             case R.id.bidButton:
