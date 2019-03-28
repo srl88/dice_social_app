@@ -22,6 +22,7 @@ public class Player {
     public String computeHand(ArrayList<Cup> cups, int index, int numberOfPlayers, ArrayList<String> bids) {
         int[] dieCounts = new int[7];
 
+
         for(int i=0;i<cups.get(index).getDiceNumber();i++) {
             dieCounts[cups.get(index).getCup().get(i).getFace()]++;
         }
@@ -94,8 +95,9 @@ public class Player {
 
             return (bidCount+1) + " " + bidDie;
         }
+        int dieMax = findMax(dieCounts);
 
-        return 2 + " " + 2;
+        return 2 + " " + dieMax;
 
     }
 
@@ -125,5 +127,18 @@ public class Player {
             dfact = dfact * i;
         return (nfact/dfact)*(Math.pow((1.0/3), k))*Math.pow(2.0/3, (n-k));
     }
+
+    private int findMax(int[] list) {
+        int max=list[0];
+        int index = 0;
+        for (int i =0; i<list.length;i++) {
+            if (list[i] > max) {
+                max = list[i];
+                index = i;
+            }
+        }
+        return index;
+    }
+
 
 }
