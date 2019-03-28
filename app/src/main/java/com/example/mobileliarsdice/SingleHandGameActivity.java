@@ -28,7 +28,7 @@ public class SingleHandGameActivity extends AppCompatActivity {
     private DatabaseReference database;
     private ValueEventListener eventListener;
 
-    private TextView lblCurrentTurn, lblCurrentBid, currentTurn, currentBid;
+    private TextView lblCurrentTurn, lblCurrentBid, currentTurn, currentBid, dicePlayer1, dicePlayer2;
     private ImageView firstDiceImage, secondDiceImage, thirdDiceImage, fourthDiceImage, fifthDiceImage;
     private Button readyButton, quitButton, bidButton, challengeButton;
 
@@ -45,6 +45,11 @@ public class SingleHandGameActivity extends AppCompatActivity {
     private boolean ended;
     private boolean leave;
 
+    private int[] diceOf1;
+    private int[] diceOf2;
+    private int nbDice1;
+    private int nbDice2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +60,8 @@ public class SingleHandGameActivity extends AppCompatActivity {
 
         currentTurn = findViewById(R.id.currentTurn);
         currentBid = findViewById(R.id.currentBid);
+        dicePlayer1 = findViewById(R.id.dicePlayer1);
+        dicePlayer2 = findViewById(R.id.dicePlayer2);
 
         firstDiceImage = findViewById(R.id.firstDiceImage);
         secondDiceImage = findViewById(R.id.secondDiceImage);
@@ -85,6 +92,8 @@ public class SingleHandGameActivity extends AppCompatActivity {
         ended = false;
         leave = false;
 
+        diceOf1 = new int[5];
+        diceOf2 = new int[5];
 
         // Check if the player is room master
         intent = getIntent();
@@ -199,6 +208,26 @@ public class SingleHandGameActivity extends AppCompatActivity {
                             database.setValue(sh_game.getCups().get(1).getCup().get(3).getFace());
                             database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS").child(room_id).child("player2_die5");
                             database.setValue(sh_game.getCups().get(1).getCup().get(4).getFace());
+                            diceOf1[0] = roomSnapshot.getPlayer1_die1();
+                            diceOf1[1] = roomSnapshot.getPlayer1_die2();
+                            diceOf1[2] = roomSnapshot.getPlayer1_die3();
+                            diceOf1[3] = roomSnapshot.getPlayer1_die4();
+                            diceOf1[4] = roomSnapshot.getPlayer1_die5();
+                            diceOf2[0] = roomSnapshot.getPlayer2_die1();
+                            diceOf2[1] = roomSnapshot.getPlayer2_die2();
+                            diceOf2[2] = roomSnapshot.getPlayer2_die3();
+                            diceOf2[3] = roomSnapshot.getPlayer2_die4();
+                            diceOf2[4] = roomSnapshot.getPlayer2_die5();
+                            for (int i=0;i<5;i++) {
+                                if (diceOf1[i]!=0) {
+                                    nbDice1++;
+                                }
+                                if (diceOf2[i]!=0) {
+                                    nbDice2++;
+                                }
+                            }
+                            dicePlayer1.setText("Player A has "+nbDice1+" dice");
+                            dicePlayer2.setText("Player B has "+nbDice2+" dice");
                         }
 
                         // Update information for both players

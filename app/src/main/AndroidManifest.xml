@@ -65,7 +65,8 @@
         </activity>
         <activity
             android:name=".SingleHandGameActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="true"/>
         <activity
             android:name=".BidWindow"
             android:theme="@style/AppTheme.PopupWindow" />

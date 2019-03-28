@@ -79,6 +79,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:text="" />
+            <TextView
+                android:id="@+id/dicePlayer1"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_toRightOf="@+id/currentBid"
+                android:text="" />
+            <TextView
+                android:id="@+id/dicePlayer2"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_toRightOf="@+id/dicePlayer1"
+                android:text="" />
         </RelativeLayout>
     </TableRow>
 
