@@ -77,10 +77,11 @@ Challenge - When a player denies that another player's bet is true.
 Round - a phase in the game in which one of the players rolls the dice and makes a bet as to
 how many dice there are.
 
-The format of the game that Mobile Liar's Dice follows is Common Hand Liar's Dice. This means there
-is a single hand of dice in play during rounds and each player takes turns rolling the dice in the
-hand or betting on the number of dice with certain face values. Each player's score is kept track
-of using coin chips.
+There are two formats of Liar's Dice: Common Hand and Traditional.
+
+In the format of Common Hand Liar's Dice, there is a single hand of dice in play during rounds and
+each player takes turns rolling the dice in the hand or betting on the number of dice with certain
+face values. Each player's score is kept track of using coin chips.
 
 During each round the player with the hand makes a bet as to what the dice face values are. The other
 players may in turn accept the bet or challenge it. If no other players challenge the bet, the round
@@ -91,7 +92,16 @@ However, if the challenging player is wrong they must give up the amount of coin
 player loses all their coin chips as a result of a challenge, they are unable to participate in any
 further rounds of the game. Players do not inherit one another's coin chips.
 
-The winner is ultimately determined by whichever player still has remaining coin chips." />
+The winner is ultimately determined by whichever player still has remaining coin chips.
+
+In Traditional Liar's Dice, each player has their own hand that only they may see. Players take turns
+making bets, but instead take into account the total number of dice in play. This means players are
+able to make bets on the face values of dice equal to or greater than the amount of dice in their own
+hand. Challenges are still made against these bets the same way, but players instead lose a die from
+their hand if their challenge is wrong.
+
+The winner is ultimately determined by which player still has remaining dice in their hand."
+                />
         </LinearLayout>
 
     </android.support.design.widget.AppBarLayout>

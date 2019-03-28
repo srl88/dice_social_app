@@ -155,17 +155,8 @@
             android:background="@color/ORANGE"
             android:fontFamily="@font/bangers"
             android:onClick="onClick"
-            android:text="CHALLENGE"
-            android:textAlignment="center"
-            android:textSize="30sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:gravity="bottom"
-        android:orientation="horizontal">
+            android:text="@string/quit_button" />
+    </TableRow>
 
         <Button
             android:id="@+id/bidButton"

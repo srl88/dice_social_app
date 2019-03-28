@@ -67,8 +67,8 @@ public class CommonHandGameActivity extends AppCompatActivity {
         challengeButton.setEnabled(false);
 
         // Add players
-        Player player1 = new Player("A", 20);
-        Player player2 = new Player("B", 20);
+        Player player1 = new Player("A");
+        Player player2 = new Player("B");
         ArrayList<Player> players = new ArrayList<Player>();
         players.add(player1);
         players.add(player2);

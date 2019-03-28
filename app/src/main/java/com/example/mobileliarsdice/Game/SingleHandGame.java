@@ -112,9 +112,15 @@ public class SingleHandGame {
         }
         if (count < bidNumber) {
         	cups.get((players.indexOf(challenger) + 1) % numberOfPlayers).takeOut();
+        	// Challenger wins
+            System.out.println("C Player1: " + cups.get(0).toString());
+            System.out.println("C Player2: " + cups.get(1).toString());
             return true;
         } else {
         	cups.get(players.indexOf(challenger)).takeOut();
+        	// Challenger loses
+            System.out.println("C Player1: " + cups.get(0).toString());
+            System.out.println("C Player2: " + cups.get(1).toString());
             return false;
         }
     }

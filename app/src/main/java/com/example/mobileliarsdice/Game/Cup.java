@@ -30,34 +30,55 @@ public class Cup {
 
     // Roll n number of dice inside the cup
     public void roll(boolean first, boolean second, boolean third, boolean fourth, boolean fifth) {
-        if(first) {
+        if(first && cup.get(0).getFace() != 0) {
             cup.get(0).roll();
         }
-        if(second) {
+        if(second && cup.get(1).getFace() != 0) {
             cup.get(1).roll();
         }
-        if(third) {
+        if(third && cup.get(2).getFace() != 0) {
             cup.get(2).roll();
         }
-        if(fourth) {
+        if(fourth && cup.get(3).getFace() != 0) {
             cup.get(3).roll();
         }
-        if(fifth) {
+        if(fifth && cup.get(4).getFace() != 0) {
             cup.get(4).roll();
         }
     }
 
     // Roll all dice inside the cup
     public void shake() {
-    	for (int i = 0; i < cup.size(); i++) {
-    		cup.get(i).roll();
+        if(cup.get(0).getFace() != 0) {
+            cup.get(0).roll();
+        }
+        if(cup.get(1).getFace() != 0) {
+            cup.get(1).roll();
+        }
+        if(cup.get(2).getFace() != 0) {
+            cup.get(2).roll();
+        }
+        if(cup.get(3).getFace() != 0) {
+            cup.get(3).roll();
+        }
+        if(cup.get(4).getFace() != 0) {
+            cup.get(4).roll();
         }
     }
 
     // Take out a die from the cup
+    // Die face value = 0
     public void takeOut() {
-        if (cup.size() > 0) {
-            cup.remove(0);
+        if(cup.get(4).getFace() != 0) {
+            cup.get(4).setFace(0);
+        } else if(cup.get(3).getFace() != 0) {
+            cup.get(3).setFace(0);
+        } else if(cup.get(2).getFace() != 0) {
+            cup.get(2).setFace(0);
+        } else if(cup.get(1).getFace() != 0) {
+            cup.get(1).setFace(0);
+        } else if(cup.get(0).getFace() != 0) {
+            cup.get(0).setFace(0);
         }
     }
 
