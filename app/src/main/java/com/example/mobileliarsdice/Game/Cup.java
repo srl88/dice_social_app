@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class Cup {
     // Attributes
     private ArrayList<Die> cup;
+    private int diceNumber;
 
     // Constructor: put five dice in a cup
     public Cup() {
@@ -17,6 +18,7 @@ public class Cup {
             Die die = new Die(1);
             cup.add(die);
         }
+        diceNumber = 5;
     }
 
     public ArrayList<Die> getCup() {
@@ -26,6 +28,10 @@ public class Cup {
     public PokerDiceHand getHand() {
     	PokerDiceHand hand = new PokerDiceHand(cup.get(0), cup.get(1), cup.get(2), cup.get(3), cup.get(4));
     	return hand;
+    }
+
+    public int getDiceNumber() {
+        return diceNumber;
     }
 
     // Roll n number of dice inside the cup
@@ -71,14 +77,21 @@ public class Cup {
     public void takeOut() {
         if(cup.get(4).getFace() != 0) {
             cup.get(4).setFace(0);
+            diceNumber = 4;
         } else if(cup.get(3).getFace() != 0) {
             cup.get(3).setFace(0);
+            diceNumber = 3;
         } else if(cup.get(2).getFace() != 0) {
             cup.get(2).setFace(0);
+            diceNumber = 2;
         } else if(cup.get(1).getFace() != 0) {
             cup.get(1).setFace(0);
+            diceNumber = 1;
         } else if(cup.get(0).getFace() != 0) {
             cup.get(0).setFace(0);
+            diceNumber = 0;
+        } else {
+            diceNumber = 5;
         }
     }
 

@@ -24,7 +24,8 @@
         android:roundIcon="@mipmap/app_foreground"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!--
+        <activity android:name=".InvitationActivity"
+            android:theme="@style/AppTheme.PopupWindow"></activity>
         <activity
             android:name=".deleteActivity"
             android:label="@string/title_activity_logout"
@@ -52,32 +53,26 @@
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        -->
         <!-- COMMON HAND GAME -->
-        <!--
-        <activity android:name=".CommonHandGameActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <activity android:name=".CommonHandGameActivity"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        -->
-
         <!-- SINGLE HAND GAME -->
         <activity android:name=".TestActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
-        <activity android:name=".SingleHandGameActivity"></activity>
-        <activity android:name=".BidWindow"
-            android:theme="@style/AppTheme.PopupWindow"></activity>
+        <activity
+            android:name=".SingleHandGameActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".BidWindow"
+            android:theme="@style/AppTheme.PopupWindow" />
+        <!-- SINGLE PLAYER MODE -->
+        <activity android:name=".SinglePlayerModeActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
-</manifest>
+    </manifest>

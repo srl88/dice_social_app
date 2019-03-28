@@ -61,7 +61,6 @@ public class MessageActivity extends AppCompatActivity {
     String friend_url;
     //Reference for database
     DatabaseReference msgRef;
-
     //adapter and list for msgs
     MessageAdapter messageAdapter;
     List<Messages> allMsg;
@@ -306,4 +305,12 @@ public class MessageActivity extends AppCompatActivity {
             });
         }
     }
+
+    //just in case
+    @Override
+    public void onDestroy(){
+        this.finish();
+        super.onDestroy();
+    }
+
 }

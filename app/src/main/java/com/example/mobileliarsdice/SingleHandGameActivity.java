@@ -26,8 +26,9 @@ public class SingleHandGameActivity extends AppCompatActivity {
     private Bundle bundle;
 
     private DatabaseReference database;
+    private ValueEventListener eventListener;
 
-    private TextView currentTurn, currentBid;
+    private TextView lblCurrentTurn, lblCurrentBid, currentTurn, currentBid;
     private ImageView firstDiceImage, secondDiceImage, thirdDiceImage, fourthDiceImage, fifthDiceImage;
     private Button readyButton, quitButton, bidButton, challengeButton;
 
@@ -42,11 +43,15 @@ public class SingleHandGameActivity extends AppCompatActivity {
     private String player_id;
     private boolean roomMaster;
     private boolean ended;
+    private boolean leave;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_hand_game);
+
+        lblCurrentTurn = findViewById(R.id.lblCurrentTurn);
+        lblCurrentBid = findViewById(R.id.lblCurrentBid);
 
         currentTurn = findViewById(R.id.currentTurn);
         currentBid = findViewById(R.id.currentBid);
@@ -64,6 +69,8 @@ public class SingleHandGameActivity extends AppCompatActivity {
 
         readyButtonClicked = false;
 
+        lblCurrentTurn.setVisibility(View.INVISIBLE);
+        lblCurrentBid.setVisibility(View.INVISIBLE);
         firstDiceImage.setVisibility(View.INVISIBLE);
         secondDiceImage.setVisibility(View.INVISIBLE);
         thirdDiceImage.setVisibility(View.INVISIBLE);
@@ -76,6 +83,7 @@ public class SingleHandGameActivity extends AppCompatActivity {
         bidFace = 0;
         bidNumber = 0;
         ended = false;
+        leave = false;
 
 
         // Check if the player is room master
@@ -85,10 +93,11 @@ public class SingleHandGameActivity extends AppCompatActivity {
         if(roomMaster == true) {
             // Create room on database
             database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS");
-            room_id = database.push().getKey();
+            room_id = intent.getStringExtra("room_id");
+            //room_id = database.push().getKey();
             // Create room with empty player2_id
-            room = new SingleHandRooms(room_id, player_id, "", false, false, false, false, false, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 0, 0);
-            database.child(room_id).setValue(room);
+            //room = new SingleHandRooms(room_id, player_id, "", false, false, false, false, false, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 0, 0);
+            //database.child(room_id).setValue(room);
         } else {
             // Player 1 passes room id through invitation and
             // player 2 gets the room id by accepting invitation
@@ -106,7 +115,7 @@ public class SingleHandGameActivity extends AppCompatActivity {
     // Get room information from the database and update room variable in the activity
     public void readDatabase(final String room_id) {
         database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS");
-        database.addValueEventListener(new ValueEventListener() {
+        eventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 boolean roomDataFound = false;
@@ -235,6 +244,8 @@ public class SingleHandGameActivity extends AppCompatActivity {
                             // Update displayed information
                             bidFace = roomSnapshot.getBid_face();
                             bidNumber = roomSnapshot.getBid_number();
+                            lblCurrentTurn.setVisibility(View.VISIBLE);
+                            lblCurrentBid.setVisibility(View.VISIBLE);
                             currentTurn.setText("Player " + roomSnapshot.getTurn());
                             currentBid.setText(roomSnapshot.getBid_face() + " x" + roomSnapshot.getBid_number());
                             // Update dice images
@@ -338,7 +349,7 @@ public class SingleHandGameActivity extends AppCompatActivity {
                             }
 
                             // Once a player has challenged another player
-                            if(roomSnapshot.isChallenged()) {
+                            if(!ended && roomSnapshot.isChallenged()) {
                                 if(roomMaster && roomSnapshot.getRoundWinner() == 1) {
                                     Toast.makeText(SingleHandGameActivity.this, "You have won the round!", Toast.LENGTH_SHORT).show();
                                 } else if(roomMaster && roomSnapshot.getRoundWinner() == 2) {
@@ -388,9 +399,13 @@ public class SingleHandGameActivity extends AppCompatActivity {
                     if(ended) {
                         currentTurn.setText("The game has ended.");
                     } else {
-                        currentTurn.setText("Your opponent has left.");
+                        if(!leave) {
+                            currentTurn.setText("Your opponent has left.");
+                        }
                     }
                     currentBid.setText("");
+                    lblCurrentTurn.setVisibility(View.INVISIBLE);
+                    lblCurrentBid.setVisibility(View.INVISIBLE);
                     firstDiceImage.setVisibility(View.INVISIBLE);
                     secondDiceImage.setVisibility(View.INVISIBLE);
                     thirdDiceImage.setVisibility(View.INVISIBLE);
@@ -404,18 +419,36 @@ public class SingleHandGameActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
-        });
+        };
+
+        // Add event listener
+        database.addValueEventListener(eventListener);
+    }
+
+    // Disable back button
+    @Override
+    public void onBackPressed() {
+        leave = true;
+        database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS").child(room_id);
+        database.removeValue();
+        database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS");
+        database.removeEventListener(eventListener);
+        this.finish();
     }
 
     public void onClick(View view) {
         switch(view.getId()) {
+            case R.id.inGameChat:
+                Toast.makeText(getApplicationContext(),"CHAT",Toast.LENGTH_SHORT).show();
+                //intent = new Intent(this, chatWindow.class);
+                //startActivity(intent);
+                break;
             case R.id.readyButton:
                 if(!readyButtonClicked) {
                     // Update ready button
                     readyButtonClicked = true;
                     readyButton.setText(getResources().getText(R.string.ready_button_clicked));
                     readyButton.setBackgroundColor(getResources().getColor(R.color.colorGray,getResources().newTheme()));
-                    Toast.makeText(getApplicationContext(),"Ready.",Toast.LENGTH_SHORT).show();
                     // Update database
                     if(roomMaster == true) {
                         database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS").child(room_id).child("player1_ready");
@@ -429,7 +462,6 @@ public class SingleHandGameActivity extends AppCompatActivity {
                     readyButtonClicked = false;
                     readyButton.setText(getResources().getText(R.string.ready_button_not_clicked));
                     readyButton.setBackgroundColor(getResources().getColor(R.color.colorRed,getResources().newTheme()));
-                    Toast.makeText(getApplicationContext(),"Cancelled.",Toast.LENGTH_SHORT).show();
                     // Update database
                     if(roomMaster == true) {
                         database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS").child(room_id).child("player1_ready");
@@ -443,9 +475,12 @@ public class SingleHandGameActivity extends AppCompatActivity {
 
             case R.id.quitButton:
                 // Destroy data
+                leave = true;
                 database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS").child(room_id);
                 database.removeValue();
-                finish();
+                database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS");
+                database.removeEventListener(eventListener);
+                this.finish();
                 break;
 
             case R.id.bidButton:
@@ -461,7 +496,6 @@ public class SingleHandGameActivity extends AppCompatActivity {
                 database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS").child(room_id).child("challenged");
                 database.setValue(true);
                 break;
-
         }
     }
 

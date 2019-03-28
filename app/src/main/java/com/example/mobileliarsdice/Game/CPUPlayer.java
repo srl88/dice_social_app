@@ -2,26 +2,29 @@ package com.example.mobileliarsdice.Game;
 
 import java.util.ArrayList;
 
-public class Player {
+/**
+ * Created by Philibert ADAM
+ *
+ *
+ */
+
+public class CPUPlayer extends Player {
     // Attributes
     private String name;
 
     // Constructor
-    public Player(String name) {
-        this.name = name;
+    public CPUPlayer(String name) {
+        super("cpu");
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String toString() {
-        return "name: " + name;
-    }
-
-    public String computeHand(ArrayList<Cup> cups, int index, int numberOfPlayers, ArrayList<String> bids) {
+    /**main function for bidding
+     *
+     * @param cups
+     * @param index
+     * @return n
+     */
+    public String computeHand(ArrayList<Cup> cups, int index, int numberOfPlayers, String[] bids) {
         int[] dieCounts = new int[7];
-
 
         for(int i=0;i<cups.get(index).getDiceNumber();i++) {
             dieCounts[cups.get(index).getCup().get(i).getFace()]++;
@@ -30,21 +33,28 @@ public class Player {
         for(int i=2; i<7; i++)
             dieCounts[i] += dieCounts[1];
 
-        if(bids.size() > 0)
+        if(bids.length > 0)
         {
-            String[] lastBid = bids.get(bids.size() - 1).split(" ");
+            String[] lastBid = bids[bids.length - 1].split(" ");
             int bidCount = Integer.valueOf(lastBid[0]);
             int bidDie = Integer.valueOf(lastBid[1]);
 
             // Check if I hold a better bid
             boolean betterBid = false;
+            int myBidDie;
             int myBidCount;
             int myHighestCount = 0;
+            int myHighDie = bidDie +1;
 
-            myHighestCount = dieCounts[bidDie];
-
-            if((myHighestCount > bidCount) || (myHighestCount == bidCount)) {
+            for(int i = 2; i < 7; i++) {
+                if(dieCounts[i] >= myHighestCount) {
+                    myHighestCount = dieCounts[i];
+                    myHighDie = i;
+                }
+            }
+            if((myHighestCount > bidCount) || ((myHighestCount == bidCount) && (myHighDie > bidDie))) {
                 betterBid = true;
+                myBidDie = myHighDie;
                 myBidCount = myHighestCount;
             }
 
@@ -57,6 +67,10 @@ public class Player {
                     diceInPlay += cups.get(i).getDiceNumber();
                 }
                 unknownDice = diceInPlay - cups.get(index).getDiceNumber();
+
+                if (myHighDie <= bidDie) {
+                    myDiceNeeded++;
+                }
 
                 int previousBidder = index - 1;
 
@@ -93,11 +107,10 @@ public class Player {
                     return "Liar!";
             }
 
-            return (bidCount+1) + " " + bidDie;
+            return (bidCount+1) + " " + myHighDie;
         }
-        int dieMax = findMax(dieCounts);
 
-        return 2 + " " + dieMax;
+        return 2 + " " + 2;
 
     }
 
@@ -127,18 +140,4 @@ public class Player {
             dfact = dfact * i;
         return (nfact/dfact)*(Math.pow((1.0/3), k))*Math.pow(2.0/3, (n-k));
     }
-
-    private int findMax(int[] list) {
-        int max=list[0];
-        int index = 0;
-        for (int i =0; i<list.length;i++) {
-            if (list[i] > max) {
-                max = list[i];
-                index = i;
-            }
-        }
-        return index;
-    }
-
-
 }

@@ -299,7 +299,7 @@ public class loginActivity extends AppCompatActivity implements ActivityCompat.O
     private void updateCurrentUser(final Double longitude, final Double latitude) {
         pd.setMessage("Updating your profile location...");
         final String _id = FireBaseGlobals.getUser().getUid();
-        DatabaseReference refUser = FireBaseGlobals.getDataBase().getReference("USERS/").child(_id);
+        DatabaseReference refUser = FireBaseGlobals.getDataBase().getReference("USERS").child(_id);
         HashMap<String, Object> newValues = new HashMap<>();
         newValues.put("longitude", longitude);
         newValues.put("latitude", latitude);

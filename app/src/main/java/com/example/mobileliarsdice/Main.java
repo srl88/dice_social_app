@@ -1,7 +1,12 @@
 package com.example.mobileliarsdice;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,12 +14,18 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.TextView;
 
 
 import com.example.mobileliarsdice.Fragments.Location_fragment;
 import com.example.mobileliarsdice.Fragments.Chat_fragment;
 import com.example.mobileliarsdice.Fragments.Settings_fragment;
-
+import com.example.mobileliarsdice.Models.Rooms;
+import com.example.mobileliarsdice.Models.Users;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 
 /**
@@ -116,6 +127,60 @@ public class Main extends AppCompatActivity {
         });
 
 
+        //Create event listener for the own user in case of invitation
+        DatabaseReference refUser = FireBaseGlobals.getDataBase().getReference("USERS").child(FireBaseGlobals.getUser().getUid());
+
+        refUser.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //UPDATE USER
+                UserGlobals.mUser = dataSnapshot.getValue(Users.class);
+                //Two posibilities... the current user is sending the invitation or
+                // getting it
+                if(UserGlobals.mUser.getPlayingWithId().equals("NONE")) {
+                    return;
+                }
+
+                if(!UserGlobals.isChallanger&&!UserGlobals.isInvited){
+                    UserGlobals.isInvited = true;
+                    // at this point the room has been created so we launch the activity
+                    // we first need the information of the other player.
+                    DatabaseReference friendRef = FireBaseGlobals.getDataBase().getReference("USERS").child(UserGlobals.mUser.getPlayingWithId());
+                    friendRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if(dataSnapshot.getValue()!=null){
+                                Users u = dataSnapshot.getValue(Users.class);
+                                String friend_id = u.getId();
+                                String friend_name = u.getUserName();
+                                String friend_URL = u.getUrl();
+                                //Create the invitation
+                                Intent intent = new Intent(getApplicationContext(), InvitationActivity.class);
+                                intent.putExtra("friend_id", friend_id);
+                                intent.putExtra("friend_name", friend_name);
+                                intent.putExtra("friend_URL", friend_URL);
+                                // Prevent BidWindow from opening twice
+                                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                //start new activity
+                                UserGlobals.isChallanger = false;
+                                startActivity(intent);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         //GETS RID OF THE TOP BAR
         try{
             this.getSupportActionBar().hide();
@@ -165,14 +230,53 @@ public class Main extends AppCompatActivity {
         }
     }
 
+    /**
+     * Method to update the database so the user does not show as online
+     */
+    public void setAvailability(boolean online){
+        String _id = UserGlobals.mUser.getId();
+        UserGlobals.mUser.setOnline(online);
+        if(online){
+            UserGlobals.mUser.setPlayingWithId("NONE");
+        }
+        DatabaseReference offLineRef = FireBaseGlobals.getDataBase().getReference("USERS").child(_id);
+        offLineRef.setValue(UserGlobals.mUser);
+    }
+
+    @Override
+    public void onStop(){
+        setAvailability(false);
+        super.onStop();
+    }
+
+    @Override
+    public void onRestart(){
+        setAvailability(true);
+        UserGlobals.isChallanger=false;
+        UserGlobals.isInvited = false;
+        super.onRestart();
+    }
+
+    @Override
+    public void onPause(){
+        setAvailability(false);
+        super.onPause();
+    }
+
+    @Override
+    public void onResume(){
+        setAvailability(true);
+        UserGlobals.isInvited = false;
+        UserGlobals.isChallanger=false;
+        super.onResume();
+    }
 
     @Override
     public void onDestroy(){
+        //make the user offline
+        setAvailability(false);
         super.onDestroy();
-
     }
-
-
 
 }
 
