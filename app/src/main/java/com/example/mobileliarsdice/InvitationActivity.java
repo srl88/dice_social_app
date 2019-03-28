@@ -41,6 +41,8 @@ public class InvitationActivity extends AppCompatActivity {
     TextView txt;
     CountDownTimer timer;
 
+    DatabaseReference roomRef;
+    ValueEventListener eventListen;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,8 +122,8 @@ public class InvitationActivity extends AppCompatActivity {
             }
         });
 
-        DatabaseReference roomRef = FireBaseGlobals.getDataBase().getReference("ROOMS").child(Utilities.createMessageKey(UserGlobals.mUser.getId(), friend_id));
-        roomRef.addValueEventListener(new ValueEventListener() {
+        roomRef = FireBaseGlobals.getDataBase().getReference("ROOMS").child(Utilities.createMessageKey(UserGlobals.mUser.getId(), friend_id));
+        eventListen = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -140,13 +142,9 @@ public class InvitationActivity extends AppCompatActivity {
                         database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS");
                         SingleHandRooms room = new SingleHandRooms(room_id, "player1_id", "", false, false, false, false, false, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 0, 0);
                         database.child(room_id).setValue(room);
-                        startActivity(intent);
                         intent.putExtra("room_id", room_id);
                         // Prevent BidWindow from opening twice
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         endActivity2();
                     } else {
@@ -160,9 +158,6 @@ public class InvitationActivity extends AppCompatActivity {
                             public void run() {
                                 // Prevent BidWindow from opening twice
                                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
                                 endActivity2();
                             }
@@ -183,7 +178,9 @@ public class InvitationActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        };
+
+        roomRef.addValueEventListener(eventListen);
 
         //GETS RID OF THE TOP BAR
         try{
@@ -286,6 +283,7 @@ public class InvitationActivity extends AppCompatActivity {
      * Ends the activity
      */
     private void endActivity(){
+        roomRef.removeEventListener(eventListen);
         Utilities.createToast("Error while sending the invitation.. Try again!", InvitationActivity.this);
         if(invitation!=null){
             try{
@@ -340,6 +338,7 @@ public class InvitationActivity extends AppCompatActivity {
         offLineRef.setValue(UserGlobals.mUser);
     }
     public void endActivity2(){
+        roomRef.removeEventListener(eventListen);
         if(invitation!=null){
             try{
                 DatabaseReference ref = FireBaseGlobals.getDataBase().getReference("ROOMS").child(Utilities.createMessageKey(invitation.getId_1(), invitation.getId_2()));

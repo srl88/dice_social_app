@@ -161,9 +161,6 @@ public class Main extends AppCompatActivity {
                                 intent.putExtra("friend_URL", friend_URL);
                                 // Prevent BidWindow from opening twice
                                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 //start new activity
                                 UserGlobals.isChallanger = false;
                                 startActivity(intent);
