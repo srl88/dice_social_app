@@ -5,4 +5,8 @@
     <color name="colorAccent">#598889</color>
     <color name="colorGray">#707070</color>
     <color name="colorRed">#F00000</color>
+    <color name="LIMEGREEN">#37FF00</color>
+    <color name="ORANGE">#FF8800</color>
+    <color name="YELLOW">#FFEE00</color>
+    <color name="BURNTORANGE">#E67B00</color>
 </resources>

@@ -18,6 +18,7 @@
             android:id="@+id/faceOneImage"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:background="@color/common_google_signin_btn_text_dark_default"
             android:onClick="onClick"
             android:src="@drawable/face1" />
 
@@ -25,6 +26,7 @@
             android:id="@+id/faceTwoImage"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:background="@color/common_google_signin_btn_text_dark_default"
             android:onClick="onClick"
             android:src="@drawable/face2" />
 
@@ -32,6 +34,7 @@
             android:id="@+id/faceThreeImage"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:background="@color/common_google_signin_btn_text_dark_default"
             android:onClick="onClick"
             android:src="@drawable/face3" />
 
@@ -39,6 +42,7 @@
             android:id="@+id/faceFourImage"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:background="@color/common_google_signin_btn_text_dark_default"
             android:onClick="onClick"
             android:src="@drawable/face4" />
 
@@ -46,6 +50,7 @@
             android:id="@+id/faceFiveImage"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:background="@color/common_google_signin_btn_text_dark_default"
             android:onClick="onClick"
             android:src="@drawable/face5" />
 
@@ -53,6 +58,7 @@
             android:id="@+id/faceSixImage"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:background="@color/common_google_signin_btn_text_dark_default"
             android:onClick="onClick"
             android:src="@drawable/face6" />
 
