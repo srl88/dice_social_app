@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.mobileliarsdice.Game.SingleHandGame;
 import com.example.mobileliarsdice.Game.Player;
+import com.example.mobileliarsdice.Models.Chats;
 import com.example.mobileliarsdice.Models.SingleHandRooms;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,8 +29,11 @@ public class SingleHandGameActivity extends AppCompatActivity {
     private DatabaseReference database;
     private ValueEventListener eventListener;
 
+    private  DatabaseReference chatRef;
+    private  ValueEventListener eventListenerChat;
+
     private TextView lblCurrentTurn, lblCurrentBid, currentTurn, currentBid, dicePlayer1, dicePlayer2;
-    private ImageView firstDiceImage, secondDiceImage, thirdDiceImage, fourthDiceImage, fifthDiceImage;
+    private ImageView firstDiceImage, secondDiceImage, thirdDiceImage, fourthDiceImage, fifthDiceImage, chat;
     private Button readyButton, quitButton, bidButton, challengeButton;
 
     private int diceID;
@@ -50,6 +54,9 @@ public class SingleHandGameActivity extends AppCompatActivity {
     private int nbDice1;
     private int nbDice2;
 
+    private Boolean chatExist = false;
+    private Chats currentChat;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +75,7 @@ public class SingleHandGameActivity extends AppCompatActivity {
         thirdDiceImage = findViewById(R.id.thirdDiceImage);
         fourthDiceImage = findViewById(R.id.fourthDiceImage);
         fifthDiceImage = findViewById(R.id.fifthDiceImage);
+        chat = findViewById(R.id.inGameChat);
 
         readyButton = findViewById(R.id.readyButton);
         quitButton = findViewById(R.id.quitButton);
@@ -119,6 +127,41 @@ public class SingleHandGameActivity extends AppCompatActivity {
 
         // Update room whenever there is a change in database
         readDatabase(room_id);
+
+
+        /**
+         * CHAT EVENT LISTENER
+         */
+
+        String  friend_id = (intent.getStringExtra("id_1").equals(UserGlobals.mUser.getId())) ? intent.getStringExtra("id_2") : intent.getStringExtra("id_1");
+        String fried_name = (intent.getStringExtra("name_1").equals(UserGlobals.mUser.getUserName())) ? intent.getStringExtra("name_2") : intent.getStringExtra("name_2");
+        String friend_url = (intent.getStringExtra("url_1").equals(UserGlobals.mUser.getUrl())) ? intent.getStringExtra("url_2") : intent.getStringExtra("url_1");
+
+        currentChat = new Chats(friend_id, fried_name, friend_url, false);
+
+        chatRef = FireBaseGlobals.getDataBase().getReference("CHATS").child(UserGlobals.mUser.getId()).child(friend_id);
+        eventListenerChat = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue()==null) {return;}
+                chatExist = true;
+                currentChat = dataSnapshot.getValue(Chats.class);
+                if(currentChat.getNewChat()){
+                    chat.setBackgroundResource(R.drawable.new_chat);
+                }else{
+                    chat.setBackgroundResource(R.drawable.chat);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+        chatRef.addValueEventListener(eventListenerChat);
+
+
     }
 
     // Get room information from the database and update room variable in the activity
@@ -452,6 +495,7 @@ public class SingleHandGameActivity extends AppCompatActivity {
 
         // Add event listener
         database.addValueEventListener(eventListener);
+
     }
 
     // Disable back button
@@ -462,15 +506,16 @@ public class SingleHandGameActivity extends AppCompatActivity {
         database.removeValue();
         database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS");
         database.removeEventListener(eventListener);
+        chatRef.removeEventListener(eventListenerChat);
+
         this.finish();
     }
 
     public void onClick(View view) {
         switch(view.getId()) {
             case R.id.inGameChat:
-                Toast.makeText(getApplicationContext(),"CHAT",Toast.LENGTH_SHORT).show();
-                //intent = new Intent(this, chatWindow.class);
-                //startActivity(intent);
+                //Toast.makeText(getApplicationContext(),"CHAT",Toast.LENGTH_SHORT).show();
+                checkIfChatExist();
                 break;
             case R.id.readyButton:
                 if(!readyButtonClicked) {
@@ -548,4 +593,30 @@ public class SingleHandGameActivity extends AppCompatActivity {
             }
         }
     }
+
+    protected void checkIfChatExist(){
+        if(!chatExist){
+            //Create both chats. ours and friends since we are starting the conversation.
+            currentChat.setNewChat(false);
+            chatRef.setValue(currentChat);
+            //reference to the databse from friend
+            DatabaseReference temp = FireBaseGlobals.getDataBase().getReference("CHATS").child(currentChat.getId()).child(UserGlobals.mUser.getId());
+            Chats tempChat = new Chats(UserGlobals.mUser.getId(), UserGlobals.mUser.getUserName(), UserGlobals.mUser.getUrl(), false);
+            temp.setValue(tempChat);
+        }
+        goToMessageActivity();
+    }
+
+    protected void goToMessageActivity(){
+        Intent intent = new Intent(getApplicationContext(), MessageActivity.class);
+        intent.putExtra("friend_id", currentChat.getId());
+        intent.putExtra("friend_name", currentChat.getUserName());
+        intent.putExtra("friend_url", currentChat.getUrl());
+        //update current chat
+        UserGlobals.current_chat_id = currentChat.getId();
+        //start activity
+        startActivity(intent);
+    }
+
+
 }

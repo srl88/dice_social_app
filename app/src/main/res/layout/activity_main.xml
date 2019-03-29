@@ -48,9 +48,9 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabIndicator="?attr/colorError"
-            app:tabIndicatorColor="?attr/colorError"
-            app:tabIndicatorHeight="3dp">
+            app:tabIndicator="@color/common_google_signin_btn_text_dark_default"
+            app:tabIndicatorColor="@color/common_google_signin_btn_text_dark_pressed"
+            app:tabIndicatorHeight="5dp">
 
         </android.support.design.widget.TabLayout>
     </android.support.design.widget.AppBarLayout>
@@ -58,9 +58,25 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
 
+    </android.support.v4.view.ViewPager>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/SINGLE"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        app:backgroundTint="@color/BURNTORANGE"
+        app:borderWidth="20dp"
+        app:elevation="24dp"
+        app:layout_anchor="@+id/container"
+        app:layout_anchorGravity="right|bottom"
+        app:maxImageSize="100dp"
+        app:pressedTranslationZ="1dp"
+        app:srcCompat="@mipmap/app_foreground" />
 
 
 </android.support.design.widget.CoordinatorLayout>

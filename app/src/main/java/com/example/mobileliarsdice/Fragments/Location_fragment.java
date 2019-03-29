@@ -3,6 +3,7 @@ package com.example.mobileliarsdice.Fragments;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,6 +39,8 @@ public class Location_fragment extends Fragment {
     DatabaseReference refUser;
     ValueEventListener refLoc;
 
+    FloatingActionButton fab;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -49,7 +52,6 @@ public class Location_fragment extends Fragment {
 
         ranking = new ArrayList<>();
         allUsers = new ArrayList<>();
-
         updateLocationView();
 
         return rootView;

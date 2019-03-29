@@ -168,7 +168,8 @@ public class loginActivity extends AppCompatActivity implements ActivityCompat.O
             }
             else{
                 //network is not connected! Go to single mode after informing the user!
-                //TODO: INFORM USER AND GO TO SINGLE MODE
+                //TODO: INFORM USER AND GO TO SINGLE MODE AND GO
+                //
             }
         }else{
             //There is no permission! This is taken care by the permission manager.

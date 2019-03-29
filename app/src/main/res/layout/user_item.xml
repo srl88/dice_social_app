@@ -38,4 +38,15 @@
         android:textColor="@android:color/holo_orange_light"
         android:textSize="12sp"
         android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="199dp"
+        android:layout_marginTop="30dp"
+        android:text="TextView"
+        android:visibility="invisible" />
 </RelativeLayout>

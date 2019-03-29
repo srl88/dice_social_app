@@ -90,6 +90,8 @@ public class MessageActivity extends AppCompatActivity {
         sendMessage =  findViewById(R.id.message_to_send);
         image = findViewById(R.id.picture);
 
+        back = findViewById(R.id.back_button);
+
         recyclerView = findViewById(R.id.recycleView);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -118,6 +120,9 @@ public class MessageActivity extends AppCompatActivity {
         msgRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue()==null){
+                    return;
+                }
                 allMsg.clear();
                 for(DataSnapshot c : dataSnapshot.getChildren()) {
                     //update ui...
@@ -311,6 +316,12 @@ public class MessageActivity extends AppCompatActivity {
     public void onDestroy(){
         this.finish();
         super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed(){
+        UserGlobals.current_chat_id = "";
+        this.finish();
     }
 
 }
