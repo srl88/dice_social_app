@@ -170,6 +170,8 @@ public class loginActivity extends AppCompatActivity implements ActivityCompat.O
                 //network is not connected! Go to single mode after informing the user!
                 //TODO: INFORM USER AND GO TO SINGLE MODE AND GO
                 //
+                pd.setMessage("No connection found, redirecting to Single Player Mode");
+                goToSinglePlayer();
             }
         }else{
             //There is no permission! This is taken care by the permission manager.
@@ -212,6 +214,16 @@ public class loginActivity extends AppCompatActivity implements ActivityCompat.O
      */
     private void goToMain(){
         Intent i = new Intent(loginActivity.this, Main.class);
+        startActivity(i);
+        pd.dismiss();
+        this.finish();
+    }
+
+    /**
+     *  Goes to SinglePlayerMode
+     */
+    private void goToSinglePlayer(){
+        Intent i = new Intent(loginActivity.this, SinglePlayerModeActivity.class);
         startActivity(i);
         pd.dismiss();
         this.finish();

@@ -1,8 +1,10 @@
 package com.example.mobileliarsdice;
 
+        import android.content.Context;
         import android.content.Intent;
         import android.media.AudioAttributes;
         import android.media.SoundPool;
+        import android.net.NetworkInfo;
         import android.os.Build;
         import android.os.Handler;
         import android.os.Message;
@@ -18,9 +20,9 @@ package com.example.mobileliarsdice;
         import com.example.mobileliarsdice.Game.Player;
 
         import java.util.ArrayList;
-        import java.util.List;
-        import java.util.Timer;
         import java.util.TimerTask;
+
+        import android.net.ConnectivityManager;
 
 public class SinglePlayerModeActivity extends AppCompatActivity {
     private Intent intent;
@@ -153,7 +155,11 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
                 break;
 
             case R.id.quitButton:
-                finish();
+                Boolean isConnection = isNetworkConnected();
+                if (isConnection) {
+                    Utilities.createToast("Back to main!", SinglePlayerModeActivity.this);
+                    goToMain();
+                } else {this.finish();}
                 break;
 
             case R.id.bidButton:
@@ -416,5 +422,31 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
         public void run() {
             handler.sendEmptyMessage(0);
         }
+    }
+
+    /**
+     *  Goes to Main!
+     */
+    private void goToMain(){
+        Intent i = new Intent(SinglePlayerModeActivity.this, Main.class);
+        startActivity(i);
+        this.finish();
+    }
+
+    /**
+     * Checks if the device is currently connected to a netwotk
+     * Returns true if it is connected, false otherwise.
+     *
+     * @return
+     */
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            NetworkInfo nw = cm.getActiveNetworkInfo();
+            if (nw != null) {
+                return nw.isConnectedOrConnecting();
+            }
+        }
+        return false;
     }
 }

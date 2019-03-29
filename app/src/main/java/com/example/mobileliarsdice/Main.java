@@ -77,7 +77,8 @@ public class Main extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utilities.createToast("FLOATING", Main.this);
+                Utilities.createToast("Accessing Single Player Mode", Main.this);
+                goToSinglePlayer();
             }
         });
 
@@ -251,6 +252,15 @@ public class Main extends AppCompatActivity {
         }
         DatabaseReference offLineRef = FireBaseGlobals.getDataBase().getReference("USERS").child(_id);
         offLineRef.setValue(UserGlobals.mUser);
+    }
+
+    /**
+     *  Goes to SinglePlayerMode
+     */
+    private void goToSinglePlayer(){
+        Intent i = new Intent(Main.this, SinglePlayerModeActivity.class);
+        startActivity(i);
+        this.finish();
     }
 
     @Override
