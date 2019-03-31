@@ -28,7 +28,27 @@
     <string name="cancel">CANCEL</string>
     <string name="delete">DELETE</string>
     <string name="rules">
-        [Insert description of how to play the game here]
+        Before beginning to learn how to play, it\'s important to know a few basic terminologies
+        involved with the game.These are some of the terms required to understand the basic flow
+        of the game\'s conventions:
+
+        Bet - A claim to the amount of dice and their face values made by a player during their turn.
+        This can either be a true or false claim about the dice in the hand.
+
+        Challenge - When a player denies that another player\'s bet is true.
+
+        Round - a phase in the game in which one of the players rolls the dice and makes a bet as to how
+        many dice there are.
+
+        Each player has their own hand that only they may see. Players take turns making bets, but must
+        take into account the total number of dice in play. This means players are able to make bets on the
+        face values of dice equal to or greater than the amount of dice in their own hand. Challenges are
+        still made against these bets the same way, but a player loses a die from their hand if their
+        challenge is wrong or if their bet is false and another player successfully challenges it.
+        When a player loses a die, the round ends and a new round begins with the player that lost a 
+        die. If a player loses all of their dice, they are disqualified from the game.
+
+        The winner is determined by which player still has remaining dice in their hand.
     </string>
     <string name="title_activity_game">gameActivity</string>
     <string name="ready_button_clicked">CANCEL</string>
