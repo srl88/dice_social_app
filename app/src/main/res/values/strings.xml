@@ -33,6 +33,7 @@
     <string name="title_activity_game">gameActivity</string>
     <string name="ready_button_clicked">CANCEL</string>
     <string name="ready_button_not_clicked">READY</string>
+    <string name="challenge_button">CHALLENGE</string>
     <string name="quit_button">LEAVE</string>
     <string name="roll_button">ROLL</string>
     <string name="lblCurrentTurn">Turn: </string>

@@ -200,13 +200,14 @@
             android:textSize="30sp" />
 
         <Button
-            android:id="@+id/challengeButton"
+            android:id="@+id/quitButton"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:background="@color/ORANGE"
+            android:background="@color/colorRed"
             android:fontFamily="@font/bangers"
             android:onClick="onClick"
-            android:text="@string/quit_button"
+            android:text="QUIT"
+            android:textAlignment="center"
             android:textSize="30sp" />
 
     </LinearLayout>
@@ -227,14 +228,13 @@
             android:textSize="30sp" />
 
         <Button
-            android:id="@+id/quitButton"
+            android:id="@+id/challengeButton"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:background="@color/colorRed"
+            android:background="@color/ORANGE"
             android:fontFamily="@font/bangers"
             android:onClick="onClick"
-            android:text="QUIT"
-            android:textAlignment="center"
+            android:text="@string/challenge_button"
             android:textSize="30sp" />
 
     </LinearLayout>
