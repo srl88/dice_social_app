@@ -2,6 +2,7 @@ package com.example.mobileliarsdice;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 
@@ -63,6 +65,8 @@ public class Main extends AppCompatActivity {
 
     public FloatingActionButton fab;
 
+    public ImageButton howToPopUp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +86,18 @@ public class Main extends AppCompatActivity {
             }
         });
 
+        //How To Play Popup
+
+        howToPopUp = findViewById(R.id.howTo);
+        howToPopUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog dialog = new AlertDialog.Builder(Main.this)
+                        .setTitle("How To Play")
+                        .setMessage(getString(R.string.rules)).create();
+                dialog.show();
+            }
+        });
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.

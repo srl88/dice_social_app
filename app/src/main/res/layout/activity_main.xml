@@ -78,5 +78,17 @@
         app:pressedTranslationZ="1dp"
         app:srcCompat="@mipmap/app_foreground" />
 
+    <ImageButton
+        android:id="@+id/howTo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        app:backgroundTint="@color/BURNTORANGE"
+        app:layout_anchor="@+id/container"
+        app:layout_anchorGravity="left|bottom"
+        app:elevation="24dp"
+        app:srcCompat="@android:drawable/ic_menu_info_details" />
+
 
 </android.support.design.widget.CoordinatorLayout>
