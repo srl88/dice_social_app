@@ -1,6 +1,7 @@
 package com.example.mobileliarsdice.Adapters;
 
 import android.content.Context;
+import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -58,6 +59,14 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             Picasso.get().load(u.getUrl()).into(viewHolder._USER_IMAGE);
         }
 
+        float[] results = new float[3];
+        Location.distanceBetween(UserGlobals.mUser.getLatitude(), UserGlobals.mUser.getLongitude(),
+                u.getLatitude(), u.getLongitude(), results);
+        viewHolder._DISTANCE.setVisibility(View.VISIBLE);
+        viewHolder._DISTANCE.setText("~"+results[0]+" km");
+        // make sure that the distances agree!
+
+
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,11 +98,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     public class ViewHolder extends  RecyclerView.ViewHolder{
         public TextView _USER_NAME;
         public ImageView _USER_IMAGE;
+        public TextView _DISTANCE;
 
         public ViewHolder(View v){
             super(v);
             _USER_NAME = itemView.findViewById(R.id.name_profile);
             _USER_IMAGE = itemView.findViewById(R.id.image_profile);
+            _DISTANCE = itemView.findViewById(R.id.distance);
         }
     }
 }

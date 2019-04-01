@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -60,6 +61,7 @@ public class Main extends AppCompatActivity {
     public Location_fragment location_fragment;
     public  Settings_fragment settings_fragment;
 
+    public FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,15 @@ public class Main extends AppCompatActivity {
         //containing  the fragments for some operations.
         mMain = Main.this;
 
+        fab = findViewById(R.id.SINGLE);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utilities.createToast("Accessing Single Player Mode", Main.this);
+                goToSinglePlayer();
+            }
+        });
 
 
         // Create the adapter that will return a fragment for each of the three
@@ -241,6 +252,15 @@ public class Main extends AppCompatActivity {
         }
         DatabaseReference offLineRef = FireBaseGlobals.getDataBase().getReference("USERS").child(_id);
         offLineRef.setValue(UserGlobals.mUser);
+    }
+
+    /**
+     *  Goes to SinglePlayerMode
+     */
+    private void goToSinglePlayer(){
+        Intent i = new Intent(Main.this, SinglePlayerModeActivity.class);
+        startActivity(i);
+        this.finish();
     }
 
     @Override

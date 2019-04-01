@@ -139,6 +139,12 @@ public class InvitationActivity extends AppCompatActivity {
                     if(UserGlobals.isChallanger) {
                         intent.putExtra("roomMaster", true);
                         intent.putExtra("player_id", "player1_id");
+                        intent.putExtra("id_1", invitation.getId_1());
+                        intent.putExtra("id_2", invitation.getId_2());
+                        intent.putExtra("url_1", invitation.getUrl1());
+                        intent.putExtra("url_2", invitation.getUrl2());
+                        intent.putExtra("name_1", invitation.getName_1());
+                        intent.putExtra("name_2", invitation.getName_2());
                         database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS");
                         SingleHandRooms room = new SingleHandRooms(room_id, "player1_id", "", false, false, false, false, false, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 0, 0);
                         database.child(room_id).setValue(room);
@@ -151,6 +157,13 @@ public class InvitationActivity extends AppCompatActivity {
                         intent.putExtra("roomMaster", false);
                         intent.putExtra("player_id", "player2_id");
                         intent.putExtra("room_id", room_id);
+                        intent.putExtra("id_1", invitation.getId_1());
+                        intent.putExtra("id_2", invitation.getId_2());
+                        intent.putExtra("url_1", invitation.getUrl1());
+                        intent.putExtra("url_2", invitation.getUrl2());
+                        intent.putExtra("name_1", invitation.getName_1());
+                        intent.putExtra("name_2", invitation.getName_2());
+
                         Toast.makeText(InvitationActivity.this, "Waiting for room creation..", Toast.LENGTH_SHORT).show();
                         // Player 2 waits 1 second for room creation
                         new Handler().postDelayed(new Runnable() {
@@ -348,5 +361,10 @@ public class InvitationActivity extends AppCompatActivity {
         }
         resetUser();
         this.finish();
+    }
+
+    @Override
+    public void onBackPressed(){
+        endActivity2();
     }
 }

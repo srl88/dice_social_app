@@ -1,6 +1,13 @@
 package com.example.mobileliarsdice;
 
+        import android.content.Context;
         import android.content.Intent;
+        import android.media.AudioAttributes;
+        import android.media.SoundPool;
+        import android.net.NetworkInfo;
+        import android.os.Build;
+        import android.os.Handler;
+        import android.os.Message;
         import android.support.v7.app.AppCompatActivity;
         import android.os.Bundle;
         import android.view.View;
@@ -13,15 +20,24 @@ package com.example.mobileliarsdice;
         import com.example.mobileliarsdice.Game.Player;
 
         import java.util.ArrayList;
-        import java.util.List;
+        import java.util.TimerTask;
+
+        import android.net.ConnectivityManager;
 
 public class SinglePlayerModeActivity extends AppCompatActivity {
     private Intent intent;
     private Bundle bundle;
 
-    private TextView lblCurrentTurn, lblCurrentBid, currentTurn, currentBid;
+    private TextView lblCurrentTurn, lblCurrentBid, lblNbDice, currentTurn, currentBid, nbDice;
     private ImageView firstDiceImage, secondDiceImage, thirdDiceImage, fourthDiceImage, fifthDiceImage;
     private Button readyButton, quitButton, bidButton, challengeButton;
+
+    SoundPool dice_sound;       //For dice sound playing
+    int sound_id;               //Used to implement feedback to user
+    boolean rolling=false;      //Is die rolling?
+    Handler handler;
+
+
 
     private int diceID;
     private int bidFace, bidNumber;
@@ -32,16 +48,26 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
     private Player player1;
     private Player player2;
 
+    int[] diceOf;
+    int nbDiceCPU;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_player_mode);
 
+        InitSound();
+
+        //link handler to callback
+        handler=new Handler(callback);
+
         lblCurrentTurn = findViewById(R.id.lblCurrentTurn);
         lblCurrentBid = findViewById(R.id.lblCurrentBid);
+        lblNbDice = findViewById(R.id.lblNbDice);
 
         currentTurn = findViewById(R.id.currentTurn);
         currentBid = findViewById(R.id.currentBid);
+        nbDice = findViewById(R.id.NbDice);
 
         firstDiceImage = findViewById(R.id.firstDiceImage);
         secondDiceImage = findViewById(R.id.secondDiceImage);
@@ -58,6 +84,7 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
 
         lblCurrentTurn.setVisibility(View.INVISIBLE);
         lblCurrentBid.setVisibility(View.INVISIBLE);
+        lblNbDice.setVisibility(View.INVISIBLE);
 
         firstDiceImage.setVisibility(View.INVISIBLE);
         secondDiceImage.setVisibility(View.INVISIBLE);
@@ -70,6 +97,7 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
         // Initialize face and number
         bidFace = 0;
         bidNumber = 0;
+        diceOf = new int[5];
         listOfBids = new ArrayList<String>();
 
         // Add players
@@ -110,7 +138,9 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
 
                 lblCurrentTurn.setVisibility(View.VISIBLE);
                 lblCurrentBid.setVisibility(View.VISIBLE);
+                lblNbDice.setVisibility(View.VISIBLE);
                 currentTurn.setText(sh_game.getTurn().getName());
+
                 if(bidNumber == 0) {
                     currentBid.setText("");
                 } else {
@@ -125,7 +155,11 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
                 break;
 
             case R.id.quitButton:
-                finish();
+                Boolean isConnection = isNetworkConnected();
+                if (isConnection) {
+                    Utilities.createToast("Back to main!", SinglePlayerModeActivity.this);
+                    goToMain();
+                } else {this.finish();}
                 break;
 
             case R.id.bidButton:
@@ -150,38 +184,85 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
     }
 
     public void updateDiceImages() {
+        diceOf[0] = sh_game.getCups().get(1).getCup().get(0).getFace();
+        diceOf[1] = sh_game.getCups().get(1).getCup().get(1).getFace();
+        diceOf[2] = sh_game.getCups().get(1).getCup().get(2).getFace();
+        diceOf[3] = sh_game.getCups().get(1).getCup().get(3).getFace();
+        diceOf[4] = sh_game.getCups().get(1).getCup().get(4).getFace();
+        nbDiceCPU = 0;
+        for (int i=0; i<5; i++) {
+            if (diceOf[i]!=0) {
+                nbDiceCPU++;
+            }
+        }
+        nbDice.setText(Integer.toString(nbDiceCPU)) ;
+        rolling = true;
+        //Start rolling sound
+        dice_sound.play(sound_id, 1.0f, 1.0f, 0, 0, 1.0f);
+
         if(sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().size() >= 1) {
             firstDiceImage.setVisibility(View.VISIBLE);
-            diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(0).getFace(), "drawable", getPackageName());
-            firstDiceImage.setImageResource(diceID);
+            firstDiceImage.setImageResource(R.drawable.dice3droll);
+            //Pause to allow image to update
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(0).getFace(), "drawable", getPackageName());
+                    firstDiceImage.setImageResource(diceID);
+                }
+            }, 400);
         } else {
             firstDiceImage.setVisibility(View.INVISIBLE);
         }
         if(sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().size() >= 2) {
             secondDiceImage.setVisibility(View.VISIBLE);
-            diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(1).getFace(), "drawable", getPackageName());
-            secondDiceImage.setImageResource(diceID);
+            secondDiceImage.setImageResource(R.drawable.dice3droll);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(1).getFace(), "drawable", getPackageName());
+                    secondDiceImage.setImageResource(diceID);
+                }
+            }, 400);
         } else {
             secondDiceImage.setVisibility(View.INVISIBLE);
         }
         if(sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().size() >= 3) {
             thirdDiceImage.setVisibility(View.VISIBLE);
-            diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(2).getFace(), "drawable", getPackageName());
-            thirdDiceImage.setImageResource(diceID);
+            thirdDiceImage.setImageResource(R.drawable.dice3droll);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(2).getFace(), "drawable", getPackageName());
+                    thirdDiceImage.setImageResource(diceID);
+                }
+            }, 400);
         } else {
             thirdDiceImage.setVisibility(View.INVISIBLE);
         }
         if(sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().size() >= 4) {
             fourthDiceImage.setVisibility(View.VISIBLE);
-            diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(3).getFace(), "drawable", getPackageName());
-            fourthDiceImage.setImageResource(diceID);
+            fourthDiceImage.setImageResource(R.drawable.dice3droll);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(3).getFace(), "drawable", getPackageName());
+                    fourthDiceImage.setImageResource(diceID);
+                }
+            }, 400);
         } else {
             fourthDiceImage.setVisibility(View.INVISIBLE);
         }
         if(sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().size() >= 5) {
             fifthDiceImage.setVisibility(View.VISIBLE);
-            diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(4).getFace(), "drawable", getPackageName());
-            fifthDiceImage.setImageResource(diceID);
+            fifthDiceImage.setImageResource(R.drawable.dice3droll);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    diceID = getResources().getIdentifier("face" + sh_game.getCups().get(sh_game.getPlayers().indexOf(sh_game.getTurn())).getCup().get(4).getFace(), "drawable", getPackageName());
+                    fifthDiceImage.setImageResource(diceID);
+                }
+            }, 400);
         } else {
             fifthDiceImage.setVisibility(View.INVISIBLE);
         }
@@ -279,6 +360,7 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
             challengeButton.setEnabled(false);
             lblCurrentTurn.setVisibility(View.INVISIBLE);
             lblCurrentBid.setVisibility(View.INVISIBLE);
+            lblNbDice.setVisibility(View.INVISIBLE);
             firstDiceImage.setVisibility(View.INVISIBLE);
             secondDiceImage.setVisibility(View.INVISIBLE);
             thirdDiceImage.setVisibility(View.INVISIBLE);
@@ -294,6 +376,7 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
             challengeButton.setEnabled(false);
             lblCurrentTurn.setVisibility(View.INVISIBLE);
             lblCurrentBid.setVisibility(View.INVISIBLE);
+            lblNbDice.setVisibility(View.INVISIBLE);
             firstDiceImage.setVisibility(View.INVISIBLE);
             secondDiceImage.setVisibility(View.INVISIBLE);
             thirdDiceImage.setVisibility(View.INVISIBLE);
@@ -305,5 +388,65 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
             // Automatically start next round
             startRound();
         }
+    }
+
+    void InitSound() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            //uses builder pattern
+            AudioAttributes aa = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
+
+            //default max streams is 1
+            dice_sound= new SoundPool.Builder().setAudioAttributes(aa).build();
+
+        } else {
+            //Running on device earlier than Lollipop
+            dice_sound=PreLollipopSoundPool.NewSoundPool();
+        }
+        //Load the dice sound
+        sound_id=dice_sound.load(this,R.raw.shake_dice,1);
+    }
+
+    //Receives message from timer to start dice roll
+    Handler.Callback callback = new Handler.Callback() {
+        public boolean handleMessage(Message msg) {
+            rolling=false;  //user can press again
+            return true;
+        }
+    };
+
+            //When pause completed message sent to callback
+    class Roll extends TimerTask {
+        public void run() {
+            handler.sendEmptyMessage(0);
+        }
+    }
+
+    /**
+     *  Goes to Main!
+     */
+    private void goToMain(){
+        Intent i = new Intent(SinglePlayerModeActivity.this, Main.class);
+        startActivity(i);
+        this.finish();
+    }
+
+    /**
+     * Checks if the device is currently connected to a netwotk
+     * Returns true if it is connected, false otherwise.
+     *
+     * @return
+     */
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            NetworkInfo nw = cm.getActiveNetworkInfo();
+            if (nw != null) {
+                return nw.isConnectedOrConnecting();
+            }
+        }
+        return false;
     }
 }

@@ -44,7 +44,7 @@ public class CommonHandGameActivity extends AppCompatActivity {
         fourthDiceImage = findViewById(R.id.fourthDiceImage);
         fifthDiceImage = findViewById(R.id.fifthDiceImage);
 
-        rollButton = findViewById(R.id.rollButton);
+        //rollButton = findViewById(R.id.rollButton);
         readyButton = findViewById(R.id.readyButton);
         quitButton = findViewById(R.id.quitButton);
         bidButton = findViewById(R.id.bidButton);
@@ -142,7 +142,7 @@ public class CommonHandGameActivity extends AppCompatActivity {
                 updateRollButton();
                 break;
 
-            case R.id.rollButton:
+            /**case R.id.rollButton:
                 if(firstDiceImageClicked == true) {
                     ch_game.roll(true, false, false, false, false);
                 }
@@ -167,6 +167,7 @@ public class CommonHandGameActivity extends AppCompatActivity {
                 fifthDiceImage.setEnabled(false);
                 challengeButton.setEnabled(false);
                 break;
+             **/
 
             case R.id.readyButton:
                 if(!readyButtonClicked) {

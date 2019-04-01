@@ -68,6 +68,30 @@
                 android:text="" />
         </RelativeLayout>
     </TableRow>
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="50dp" >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/lblNbDice"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:text="@string/lblNbDice" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/NbDice"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:text="" />
+        </RelativeLayout>
+    </TableRow>
 
     <TableRow
         android:layout_width="match_parent"
