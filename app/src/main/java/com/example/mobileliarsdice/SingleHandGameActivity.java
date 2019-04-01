@@ -251,26 +251,6 @@ public class SingleHandGameActivity extends AppCompatActivity {
                             database.setValue(sh_game.getCups().get(1).getCup().get(3).getFace());
                             database = FirebaseDatabase.getInstance().getReference("SINGLEHANDROOMS").child(room_id).child("player2_die5");
                             database.setValue(sh_game.getCups().get(1).getCup().get(4).getFace());
-                            diceOf1[0] = roomSnapshot.getPlayer1_die1();
-                            diceOf1[1] = roomSnapshot.getPlayer1_die2();
-                            diceOf1[2] = roomSnapshot.getPlayer1_die3();
-                            diceOf1[3] = roomSnapshot.getPlayer1_die4();
-                            diceOf1[4] = roomSnapshot.getPlayer1_die5();
-                            diceOf2[0] = roomSnapshot.getPlayer2_die1();
-                            diceOf2[1] = roomSnapshot.getPlayer2_die2();
-                            diceOf2[2] = roomSnapshot.getPlayer2_die3();
-                            diceOf2[3] = roomSnapshot.getPlayer2_die4();
-                            diceOf2[4] = roomSnapshot.getPlayer2_die5();
-                            for (int i=0;i<5;i++) {
-                                if (diceOf1[i]!=0) {
-                                    nbDice1++;
-                                }
-                                if (diceOf2[i]!=0) {
-                                    nbDice2++;
-                                }
-                            }
-                            dicePlayer1.setText("Player A has "+nbDice1+" dice");
-                            dicePlayer2.setText("Player B has "+nbDice2+" dice");
                         }
 
                         // Update information for both players
@@ -320,6 +300,29 @@ public class SingleHandGameActivity extends AppCompatActivity {
                             lblCurrentBid.setVisibility(View.VISIBLE);
                             currentTurn.setText("Player " + roomSnapshot.getTurn());
                             currentBid.setText(roomSnapshot.getBid_face() + " x" + roomSnapshot.getBid_number());
+                            // Update the number of dice for each player
+                            diceOf1[0] = roomSnapshot.getPlayer1_die1();
+                            diceOf1[1] = roomSnapshot.getPlayer1_die2();
+                            diceOf1[2] = roomSnapshot.getPlayer1_die3();
+                            diceOf1[3] = roomSnapshot.getPlayer1_die4();
+                            diceOf1[4] = roomSnapshot.getPlayer1_die5();
+                            diceOf2[0] = roomSnapshot.getPlayer2_die1();
+                            diceOf2[1] = roomSnapshot.getPlayer2_die2();
+                            diceOf2[2] = roomSnapshot.getPlayer2_die3();
+                            diceOf2[3] = roomSnapshot.getPlayer2_die4();
+                            diceOf2[4] = roomSnapshot.getPlayer2_die5();
+                            nbDice1 = 0;
+                            nbDice2 = 0;
+                            for (int i=0;i<5;i++) {
+                                if (diceOf1[i]!=0) {
+                                    nbDice1++;
+                                }
+                                if (diceOf2[i]!=0) {
+                                    nbDice2++;
+                                }
+                            }
+                            dicePlayer1.setText("Player A has "+nbDice1+" dice");
+                            dicePlayer2.setText("Player B has "+nbDice2+" dice");
                             // Update dice images
                             if(roomMaster) {
                                 if (roomSnapshot.getPlayer1_die1() != 0) {
@@ -478,6 +481,8 @@ public class SingleHandGameActivity extends AppCompatActivity {
                     currentBid.setText("");
                     lblCurrentTurn.setVisibility(View.INVISIBLE);
                     lblCurrentBid.setVisibility(View.INVISIBLE);
+                    dicePlayer1.setVisibility(View.INVISIBLE);
+                    dicePlayer2.setVisibility(View.INVISIBLE);
                     firstDiceImage.setVisibility(View.INVISIBLE);
                     secondDiceImage.setVisibility(View.INVISIBLE);
                     thirdDiceImage.setVisibility(View.INVISIBLE);
