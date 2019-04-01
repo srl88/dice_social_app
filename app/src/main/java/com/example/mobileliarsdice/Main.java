@@ -95,6 +95,8 @@ public class Main extends AppCompatActivity {
                 AlertDialog dialog = new AlertDialog.Builder(Main.this)
                         .setTitle("How To Play")
                         .setMessage(getString(R.string.rules)).create();
+                dialog.setCancelable(true);
+                dialog.setCanceledOnTouchOutside(true);
                 dialog.show();
             }
         });

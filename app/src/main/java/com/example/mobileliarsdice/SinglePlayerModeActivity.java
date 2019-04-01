@@ -361,6 +361,7 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
             lblCurrentTurn.setVisibility(View.INVISIBLE);
             lblCurrentBid.setVisibility(View.INVISIBLE);
             lblNbDice.setVisibility(View.INVISIBLE);
+            nbDice.setVisibility(View.INVISIBLE);
             firstDiceImage.setVisibility(View.INVISIBLE);
             secondDiceImage.setVisibility(View.INVISIBLE);
             thirdDiceImage.setVisibility(View.INVISIBLE);
@@ -377,6 +378,7 @@ public class SinglePlayerModeActivity extends AppCompatActivity {
             lblCurrentTurn.setVisibility(View.INVISIBLE);
             lblCurrentBid.setVisibility(View.INVISIBLE);
             lblNbDice.setVisibility(View.INVISIBLE);
+            nbDice.setVisibility(View.INVISIBLE);
             firstDiceImage.setVisibility(View.INVISIBLE);
             secondDiceImage.setVisibility(View.INVISIBLE);
             thirdDiceImage.setVisibility(View.INVISIBLE);
