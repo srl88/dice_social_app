@@ -321,8 +321,8 @@ public class SingleHandGameActivity extends AppCompatActivity {
                                     nbDice2++;
                                 }
                             }
-                            dicePlayer1.setText("Player A has "+nbDice1+" dice");
-                            dicePlayer2.setText("Player B has "+nbDice2+" dice");
+                            dicePlayer1.setText("Player 1 has "+nbDice1+" dice");
+                            dicePlayer2.setText("Player 2 has "+nbDice2+" dice");
                             // Update dice images
                             if(roomMaster) {
                                 if (roomSnapshot.getPlayer1_die1() != 0) {

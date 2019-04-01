@@ -9,169 +9,175 @@
     android:paddingBottom="10dp"
     android:paddingTop="10dp"
     tools:context=".SinglePlayerModeActivity">
-    <TableRow
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="wrap_content">
         <TextView
-            android:id="@+id/placeholder"
-            android:layout_width="wrap_content"
+            android:id="@+id/gameType"
+            android:layout_width="400dp"
             android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:gravity="center_vertical"
+            android:fontFamily="@font/bangers"
+            android:text="SINGLE PLAYER MODE"
+            android:textColor="@color/common_google_signin_btn_text_dark_focused"
+            android:textSize="36sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="30dp"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/lblCurrentBid"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="@string/lblCurrentBid"/>
+        <TextView
+            android:id="@+id/currentBid"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text=""/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/lblCurrentTurn"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="@string/lblCurrentTurn" />
+        <TextView
+            android:id="@+id/currentTurn"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:gravity="center"
             android:text="" />
-    </TableRow>
+    </LinearLayout>
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="50dp" >
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center">
-            <TextView
-                android:id="@+id/lblCurrentTurn"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:text="@string/lblCurrentTurn" />
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center">
-            <TextView
-                android:id="@+id/currentTurn"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:text="" />
-        </RelativeLayout>
-    </TableRow>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/lblNbDice"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="Number of CPU dice: " />
+        <TextView
+            android:id="@+id/NbDice"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="" />
+    </LinearLayout>
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="50dp" >
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center">
-            <TextView
-                android:id="@+id/lblCurrentBid"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:text="@string/lblCurrentBid" />
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center">
-            <TextView
-                android:id="@+id/currentBid"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:text="" />
-        </RelativeLayout>
-    </TableRow>
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="50dp" >
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center">
-            <TextView
-                android:id="@+id/lblNbDice"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:text="@string/lblNbDice" />
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center">
-            <TextView
-                android:id="@+id/NbDice"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:text="" />
-        </RelativeLayout>
-    </TableRow>
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="300dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="visible">
         <ImageView
             android:id="@+id/firstDiceImage"
             android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:layout_weight="0.2" />
 
         <ImageView
             android:id="@+id/secondDiceImage"
             android:layout_width="50dp"
-            android:layout_height="50dp" />
-    </TableRow>
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+            android:layout_height="50dp"
+            android:layout_weight="0.2" />
 
         <ImageView
             android:id="@+id/thirdDiceImage"
             android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:layout_weight="0.2" />
 
         <ImageView
             android:id="@+id/fourthDiceImage"
             android:layout_width="50dp"
-            android:layout_height="50dp" />
-    </TableRow>
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="10">
+            android:layout_height="50dp"
+            android:layout_weight="0.2" />
 
         <ImageView
             android:id="@+id/fifthDiceImage"
             android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:layout_weight="0.2" />
+    </LinearLayout>
 
-    </TableRow>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="bottom"
+        android:orientation="vertical">
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <Button
             android:id="@+id/readyButton"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:background="@color/colorRed"
+            android:background="@color/LIMEGREEN"
+            android:fontFamily="@font/bangers"
             android:onClick="onClick"
-            android:text="@string/ready_button_not_clicked" />
+            android:text="@string/ready_button_not_clicked"
+            android:textAlignment="center"
+            android:textSize="30sp" />
 
         <Button
             android:id="@+id/quitButton"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:background="@color/colorGray"
+            android:background="@color/colorRed"
+            android:fontFamily="@font/bangers"
             android:onClick="onClick"
-            android:text="@string/quit_button" />
-    </TableRow>
+            android:text="QUIT"
+            android:textAlignment="center"
+            android:textSize="30sp" />
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <Button
             android:id="@+id/bidButton"
             android:layout_width="200dp"
-            android:background="@color/colorGray"
             android:layout_height="wrap_content"
+            android:background="@color/YELLOW"
+            android:fontFamily="@font/bangers"
             android:onClick="onClick"
-            android:text="BID" />
+            android:text="BID"
+            android:textAlignment="center"
+            android:textSize="30sp" />
 
         <Button
             android:id="@+id/challengeButton"
             android:layout_width="200dp"
-            android:background="@color/colorGray"
             android:layout_height="wrap_content"
+            android:background="@color/ORANGE"
+            android:fontFamily="@font/bangers"
             android:onClick="onClick"
-            android:text="CHALLENGE" />
-    </TableRow>
+            android:text="@string/challenge_button"
+            android:textSize="30sp" />
+
+    </LinearLayout>
 </TableLayout>
