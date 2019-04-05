@@ -1,7 +1,11 @@
 package com.example.mobileliarsdice;
 
 import android.content.Intent;
+import android.media.AudioAttributes;
 import android.media.SoundPool;
+import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.TimerTask;
 
 public class SingleHandGameActivity extends AppCompatActivity {
     private Intent intent;
@@ -59,6 +64,8 @@ public class SingleHandGameActivity extends AppCompatActivity {
     int sound_id;  
     boolean rolling=false;      //Is die rolling?
     Handler handler;
+
+    private int value;
 
 
     private Boolean chatExist = false;
@@ -344,11 +351,12 @@ public class SingleHandGameActivity extends AppCompatActivity {
                                 if (roomSnapshot.getPlayer1_die1() != 0) {
                                     firstDiceImage.setVisibility(View.VISIBLE);
                                     firstDiceImage.setImageResource(R.drawable.dice3droll);
+                                    value = roomSnapshot.getPlayer1_die1();
                                     //Pause to allow image to update
                                     new Handler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
-                                            diceID = getResources().getIdentifier("face" + roomSnapshot.getPlayer1_die1(), "drawable", getPackageName());
+                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
                                             firstDiceImage.setImageResource(diceID);
                                         }
                                     }, 400);
@@ -358,10 +366,11 @@ public class SingleHandGameActivity extends AppCompatActivity {
                                 if (roomSnapshot.getPlayer1_die2() != 0) {
                                     secondDiceImage.setVisibility(View.VISIBLE);
                                     secondDiceImage.setImageResource(R.drawable.dice3droll);
+                                    value = roomSnapshot.getPlayer1_die2();
                                     new Handler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
-                                            diceID = getResources().getIdentifier("face" + roomSnapshot.getPlayer1_die2(), "drawable", getPackageName());
+                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
                                             secondDiceImage.setImageResource(diceID);
                                         }
                                     }, 400);
@@ -371,10 +380,11 @@ public class SingleHandGameActivity extends AppCompatActivity {
                                 if (roomSnapshot.getPlayer1_die3() != 0) {
                                     thirdDiceImage.setVisibility(View.VISIBLE);
                                     thirdDiceImage.setImageResource(R.drawable.dice3droll);
+                                    value = roomSnapshot.getPlayer1_die3();
                                     new Handler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
-                                            diceID = getResources().getIdentifier("face" + roomSnapshot.getPlayer1_die3(), "drawable", getPackageName());
+                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
                                             thirdDiceImage.setImageResource(diceID);
                                         }
                                     }, 400);
@@ -384,10 +394,11 @@ public class SingleHandGameActivity extends AppCompatActivity {
                                 if (roomSnapshot.getPlayer1_die4() != 0) {
                                     fourthDiceImage.setVisibility(View.VISIBLE);
                                     fourthDiceImage.setImageResource(R.drawable.dice3droll);
+                                    value = roomSnapshot.getPlayer1_die4();
                                     new Handler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
-                                            diceID = getResources().getIdentifier("face" + roomSnapshot.getPlayer1_die4(), "drawable", getPackageName());
+                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
                                             fourthDiceImage.setImageResource(diceID);
                                         }
                                     }, 400);
@@ -397,10 +408,11 @@ public class SingleHandGameActivity extends AppCompatActivity {
                                 if (roomSnapshot.getPlayer1_die5() != 0) {
                                     fifthDiceImage.setVisibility(View.VISIBLE);
                                     fifthDiceImage.setImageResource(R.drawable.dice3droll);
+                                    value = roomSnapshot.getPlayer1_die5();
                                     new Handler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
-                                            diceID = getResources().getIdentifier("face" + roomSnapshot.getPlayer1_die5(), "drawable", getPackageName());
+                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
                                             fifthDiceImage.setImageResource(diceID);
                                         }
                                     }, 400);
@@ -411,10 +423,11 @@ public class SingleHandGameActivity extends AppCompatActivity {
                                 if (roomSnapshot.getPlayer2_die1() != 0) {
                                     firstDiceImage.setVisibility(View.VISIBLE);
                                     firstDiceImage.setImageResource(R.drawable.dice3droll);
+                                    value = roomSnapshot.getPlayer2_die1();
                                     new Handler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
-                                            diceID = getResources().getIdentifier("face" + roomSnapshot.getPlayer2_die1(), "drawable", getPackageName());
+                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
                                             firstDiceImage.setImageResource(diceID);
                                         }
                                     }, 400);
@@ -424,10 +437,11 @@ public class SingleHandGameActivity extends AppCompatActivity {
                                 if (roomSnapshot.getPlayer2_die2() != 0) {
                                     secondDiceImage.setVisibility(View.VISIBLE);
                                     secondDiceImage.setImageResource(R.drawable.dice3droll);
+                                    value = roomSnapshot.getPlayer2_die2();
                                     new Handler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
-                                            diceID = getResources().getIdentifier("face" + roomSnapshot.getPlayer2_die2(), "drawable", getPackageName());
+                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
                                             secondDiceImage.setImageResource(diceID);
                                         }
                                     }, 400);
@@ -437,10 +451,11 @@ public class SingleHandGameActivity extends AppCompatActivity {
                                 if (roomSnapshot.getPlayer2_die3() != 0) {
                                     thirdDiceImage.setVisibility(View.VISIBLE);
                                     thirdDiceImage.setImageResource(R.drawable.dice3droll);
+                                    value = roomSnapshot.getPlayer2_die3();
                                     new Handler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
-                                            diceID = getResources().getIdentifier("face" + roomSnapshot.getPlayer2_die3(), "drawable", getPackageName());
+                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
                                             thirdDiceImage.setImageResource(diceID);
                                         }
                                     }, 400);
@@ -450,10 +465,11 @@ public class SingleHandGameActivity extends AppCompatActivity {
                                 if (roomSnapshot.getPlayer2_die4() != 0) {
                                     fourthDiceImage.setVisibility(View.VISIBLE);
                                     fourthDiceImage.setImageResource(R.drawable.dice3droll);
+                                    value = roomSnapshot.getPlayer2_die4();
                                     new Handler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
-                                            diceID = getResources().getIdentifier("face" + roomSnapshot.getPlayer2_die4(), "drawable", getPackageName());
+                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
                                             fourthDiceImage.setImageResource(diceID);
                                         }
                                     }, 400);
@@ -462,11 +478,12 @@ public class SingleHandGameActivity extends AppCompatActivity {
                                 }
                                 if (roomSnapshot.getPlayer2_die5() != 0) {
                                     fifthDiceImage.setVisibility(View.VISIBLE);
-                                    firfthDiceImage.setImageResource(R.drawable.dice3droll);
+                                    fifthDiceImage.setImageResource(R.drawable.dice3droll);
+                                    value = roomSnapshot.getPlayer2_die5();
                                     new Handler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
-                                            diceID = getResources().getIdentifier("face" + roomSnapshot.getPlayer2_die5(), "drawable", getPackageName());
+                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
                                             fifthDiceImage.setImageResource(diceID);
                                         }
                                     }, 400);
