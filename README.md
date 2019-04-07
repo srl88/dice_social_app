@@ -164,3 +164,15 @@ https://en.wikipedia.org/wiki/Liar%27s_dice
 
 “How to Play Liar’s Dice”, wikihow.com, 2019. [Online]. Available:
 https://www.wikihow.com/Play-Liar%27s-Dice
+
+"Create Popup Menu in Android Studio", youtube.com, 2017. [Online]. Available:
+https://www.youtube.com/watch?v=LXUDqGaToe0
+
+"How To Create Pop Up Window In Android", youtube.com 2015. [Online]. Available:
+https://www.youtube.com/watch?v=fn5OlqQuOCk
+
+"How do I pass data between Activities in Android application?", stackoverflow.com, 2010. [Online]. Available:
+https://stackoverflow.com/questions/2091465/how-do-i-pass-data-between-activities-in-android-application
+
+"Working with Spinners in Android", studytonight.com, 2019. [Online]. Available:
+https://www.studytonight.com/android/spinner-example-in-android
