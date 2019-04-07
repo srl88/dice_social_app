@@ -90,9 +90,9 @@ sending the invitation. Player 2 will receive the room ID from player 1 from the
 with the same ID will be searched on the database. Once found, player2_id will be updated under 
 SINGLEHANDROOM data. Furthermore, if both players were to be switched to the game activity at the same 
 time, there can be a problem because if player 2 searches for the room with the same ID when the room 
-is being created on the database. This problem was solved by adding 1 second delay and the toast message 
-saying "Waiting for room creation.." for player 2 to make sure player 2 searches for the room after the 
-room creation.
+is being created on the database, player 2 would not be able to find the room. This problem was solved 
+by adding 1 second delay and the toast message saying "Waiting for room creation.." for player 2 to make 
+sure player 2 searches for the room after the room creation.
 
 ```
     if(UserGlobals.isChallenger) {
