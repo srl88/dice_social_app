@@ -1,6 +1,11 @@
 package com.example.mobileliarsdice;
 
 import android.content.Intent;
+import android.media.AudioAttributes;
+import android.media.SoundPool;
+import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.TimerTask;
 
 public class SingleHandGameActivity extends AppCompatActivity {
     private Intent intent;
@@ -53,6 +59,14 @@ public class SingleHandGameActivity extends AppCompatActivity {
     private int[] diceOf2;
     private int nbDice1;
     private int nbDice2;
+    
+    SoundPool dice_sound;       //For dice sound playing
+    int sound_id;  
+    boolean rolling=false;      //Is die rolling?
+    Handler handler;
+
+    private int value;
+
 
     private Boolean chatExist = false;
     private Chats currentChat;
@@ -93,6 +107,11 @@ public class SingleHandGameActivity extends AppCompatActivity {
         fifthDiceImage.setVisibility(View.INVISIBLE);
         bidButton.setEnabled(false);
         challengeButton.setEnabled(false);
+        
+        InitSound();
+        //link handler to callback
+        handler=new Handler(callback);
+
 
         // Initialize
         bidFace = 0;
@@ -325,74 +344,149 @@ public class SingleHandGameActivity extends AppCompatActivity {
                             dicePlayer2.setText("Player 2 has "+nbDice2+" dice");
                             // Update dice images
                             if(roomMaster) {
+                                rolling = true;
+                                //Start rolling sound
+                                dice_sound.play(sound_id, 1.0f, 1.0f, 0, 0, 1.0f);
+
                                 if (roomSnapshot.getPlayer1_die1() != 0) {
                                     firstDiceImage.setVisibility(View.VISIBLE);
-                                    diceID = getResources().getIdentifier("face" + roomSnapshot.getPlayer1_die1(), "drawable", getPackageName());
-                                    firstDiceImage.setImageResource(diceID);
+                                    firstDiceImage.setImageResource(R.drawable.dice3droll);
+                                    value = roomSnapshot.getPlayer1_die1();
+                                    //Pause to allow image to update
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
+                                            firstDiceImage.setImageResource(diceID);
+                                        }
+                                    }, 400);
                                 } else {
                                     firstDiceImage.setVisibility(View.INVISIBLE);
                                 }
                                 if (roomSnapshot.getPlayer1_die2() != 0) {
                                     secondDiceImage.setVisibility(View.VISIBLE);
-                                    diceID = getResources().getIdentifier("face" + roomSnapshot.getPlayer1_die2(), "drawable", getPackageName());
-                                    secondDiceImage.setImageResource(diceID);
+                                    secondDiceImage.setImageResource(R.drawable.dice3droll);
+                                    value = roomSnapshot.getPlayer1_die2();
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
+                                            secondDiceImage.setImageResource(diceID);
+                                        }
+                                    }, 400);
                                 } else {
                                     secondDiceImage.setVisibility(View.INVISIBLE);
                                 }
                                 if (roomSnapshot.getPlayer1_die3() != 0) {
                                     thirdDiceImage.setVisibility(View.VISIBLE);
-                                    diceID = getResources().getIdentifier("face" + roomSnapshot.getPlayer1_die3(), "drawable", getPackageName());
-                                    thirdDiceImage.setImageResource(diceID);
+                                    thirdDiceImage.setImageResource(R.drawable.dice3droll);
+                                    value = roomSnapshot.getPlayer1_die3();
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
+                                            thirdDiceImage.setImageResource(diceID);
+                                        }
+                                    }, 400);
                                 } else {
                                     thirdDiceImage.setVisibility(View.INVISIBLE);
                                 }
                                 if (roomSnapshot.getPlayer1_die4() != 0) {
                                     fourthDiceImage.setVisibility(View.VISIBLE);
-                                    diceID = getResources().getIdentifier("face" + roomSnapshot.getPlayer1_die4(), "drawable", getPackageName());
-                                    fourthDiceImage.setImageResource(diceID);
+                                    fourthDiceImage.setImageResource(R.drawable.dice3droll);
+                                    value = roomSnapshot.getPlayer1_die4();
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
+                                            fourthDiceImage.setImageResource(diceID);
+                                        }
+                                    }, 400);
                                 } else {
                                     fourthDiceImage.setVisibility(View.INVISIBLE);
                                 }
                                 if (roomSnapshot.getPlayer1_die5() != 0) {
                                     fifthDiceImage.setVisibility(View.VISIBLE);
-                                    diceID = getResources().getIdentifier("face" + roomSnapshot.getPlayer1_die5(), "drawable", getPackageName());
-                                    fifthDiceImage.setImageResource(diceID);
+                                    fifthDiceImage.setImageResource(R.drawable.dice3droll);
+                                    value = roomSnapshot.getPlayer1_die5();
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
+                                            fifthDiceImage.setImageResource(diceID);
+                                        }
+                                    }, 400);
                                 } else {
                                     fifthDiceImage.setVisibility(View.INVISIBLE);
                                 }
                             } else {
                                 if (roomSnapshot.getPlayer2_die1() != 0) {
                                     firstDiceImage.setVisibility(View.VISIBLE);
-                                    diceID = getResources().getIdentifier("face" + roomSnapshot.getPlayer2_die1(), "drawable", getPackageName());
-                                    firstDiceImage.setImageResource(diceID);
+                                    firstDiceImage.setImageResource(R.drawable.dice3droll);
+                                    value = roomSnapshot.getPlayer2_die1();
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
+                                            firstDiceImage.setImageResource(diceID);
+                                        }
+                                    }, 400);
                                 } else {
                                     firstDiceImage.setVisibility(View.INVISIBLE);
                                 }
                                 if (roomSnapshot.getPlayer2_die2() != 0) {
                                     secondDiceImage.setVisibility(View.VISIBLE);
-                                    diceID = getResources().getIdentifier("face" + roomSnapshot.getPlayer2_die2(), "drawable", getPackageName());
-                                    secondDiceImage.setImageResource(diceID);
+                                    secondDiceImage.setImageResource(R.drawable.dice3droll);
+                                    value = roomSnapshot.getPlayer2_die2();
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
+                                            secondDiceImage.setImageResource(diceID);
+                                        }
+                                    }, 400);
                                 } else {
                                     secondDiceImage.setVisibility(View.INVISIBLE);
                                 }
                                 if (roomSnapshot.getPlayer2_die3() != 0) {
                                     thirdDiceImage.setVisibility(View.VISIBLE);
-                                    diceID = getResources().getIdentifier("face" + roomSnapshot.getPlayer2_die3(), "drawable", getPackageName());
-                                    thirdDiceImage.setImageResource(diceID);
+                                    thirdDiceImage.setImageResource(R.drawable.dice3droll);
+                                    value = roomSnapshot.getPlayer2_die3();
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
+                                            thirdDiceImage.setImageResource(diceID);
+                                        }
+                                    }, 400);
                                 } else {
                                     thirdDiceImage.setVisibility(View.INVISIBLE);
                                 }
                                 if (roomSnapshot.getPlayer2_die4() != 0) {
                                     fourthDiceImage.setVisibility(View.VISIBLE);
-                                    diceID = getResources().getIdentifier("face" + roomSnapshot.getPlayer2_die4(), "drawable", getPackageName());
-                                    fourthDiceImage.setImageResource(diceID);
+                                    fourthDiceImage.setImageResource(R.drawable.dice3droll);
+                                    value = roomSnapshot.getPlayer2_die4();
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
+                                            fourthDiceImage.setImageResource(diceID);
+                                        }
+                                    }, 400);
                                 } else {
                                     fourthDiceImage.setVisibility(View.INVISIBLE);
                                 }
                                 if (roomSnapshot.getPlayer2_die5() != 0) {
                                     fifthDiceImage.setVisibility(View.VISIBLE);
-                                    diceID = getResources().getIdentifier("face" + roomSnapshot.getPlayer2_die5(), "drawable", getPackageName());
-                                    fifthDiceImage.setImageResource(diceID);
+                                    fifthDiceImage.setImageResource(R.drawable.dice3droll);
+                                    value = roomSnapshot.getPlayer2_die5();
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
+                                            fifthDiceImage.setImageResource(diceID);
+                                        }
+                                    }, 400);
                                 } else {
                                     fifthDiceImage.setVisibility(View.INVISIBLE);
                                 }
@@ -621,6 +715,40 @@ public class SingleHandGameActivity extends AppCompatActivity {
         UserGlobals.current_chat_id = currentChat.getId();
         //start activity
         startActivity(intent);
+    }
+
+    void InitSound() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            //uses builder pattern
+            AudioAttributes aa = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
+
+            //default max streams is 1
+            dice_sound= new SoundPool.Builder().setAudioAttributes(aa).build();
+
+        } else {
+            //Running on device earlier than Lollipop
+            dice_sound=PreLollipopSoundPool.NewSoundPool();
+        }
+        //Load the dice sound
+        sound_id=dice_sound.load(this,R.raw.shake_dice,1);
+    }
+
+    //Receives message from timer to start dice roll
+    Handler.Callback callback = new Handler.Callback() {
+        public boolean handleMessage(Message msg) {
+            rolling=false;  //user can press again
+            return true;
+        }
+    };
+
+            //When pause completed message sent to callback
+    class Roll extends TimerTask {
+        public void run() {
+            handler.sendEmptyMessage(0);
+        }
     }
 
 
