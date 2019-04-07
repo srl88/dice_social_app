@@ -1,10 +1,10 @@
 # Identification
-Mobile Liar's Dice
-Philibert Adam - B00826597
-Sung Won Bhyun - B00687631
-Eric Lee - B00719123
-Seyd Lopez - B00751312
-Eric Nguyen - B00573038
+**Mobile Liar's Dice**  
+Philibert Adam - B00826597  
+Sung Won Bhyun - B00687631  
+Eric Lee - B00719123  
+Seyd Lopez - B00751312  
+Eric Nguyen - B00573038  
 
 Git repository located at URL: https://git.cs.dal.ca/enguyen/csci4176-group-project.git
 
@@ -20,23 +20,24 @@ of the primary game element of Mobile Liar’s Dice.
 
 ## Libraries
 
-com.google.firebase:firebase-core:16.0.7:  Firebase library required to connect to Firebase
-com.google.firebase:firebase-auth:16.1.0: Firebase authentication library required to sign up, signin and signout. This library was used to check on the state of the user.
-com.google.firebase:firebase-database:16.1.0: Firebase library required for update, delete and update the Non-SQL database. 
-com.google.firebase:firebase-storage:16.1.0: Firebase library to store multimedia files such as images.
-com.android.support:recyclerview-v7:28.0.0: Library used to display data in a list with less memory.
-de.hdodenhof:circleimageview:3.0.0: Library used to display images as circles.
-com.squareup.picasso:picasso:2.71828: Library used to load stored image via URL
+* **com.google.firebase:firebase-core:16.0.7:**  Firebase library required to connect to Firebase
+* **com.google.firebase:firebase-auth:16.1.0:** Firebase authentication library required to sign up, signin and signout. This library was used to check on the state of the user.
+* **com.google.firebase:firebase-database:16.1.0:** Firebase library required for update, delete and update the Non-SQL database. 
+* **com.google.firebase:firebase-storage:16.1.0:** Firebase library to store multimedia files such as images.
+* **com.android.support:recyclerview-v7:28.0.0:** Library used to display data in a list with less memory.
+* **de.hdodenhof:circleimageview:3.0.0:** Library used to display images as circles.
+* **com.squareup.picasso:picasso:2.71828:** Library used to load stored image via URL
+
 
 
 ## Installation Notes
 
 The user accounts for Mobile Liar’s Dice are built on Firebase, which is a service host that facilitates quick 
 and simple data management. The database that was used for the user account management element of Mobile Liar’s 
-Dice can be accessed at firebase.google.com using the following credentials:
-
-Email: mobilecompproject2019@gmail.com
-Password: MobileComp@2
+Dice can be accessed at https://firebase.google.com using the following credentials:
+  
+Email: mobilecompproject2019@gmail.com  
+Password: MobileComp@2  
 
 Access to this database will enable developers to view or modify user account information. However, this should 
 only be done on rare occasions, as it is more effective to modify a user’s own account information through their 
@@ -46,25 +47,43 @@ New users should register and login before using the application using the login
 
 
 ## Code Examples
-You will encounter roadblocks and problems while developing your project. Share 2-3 'problems' that your team solved while developing your project. Write a few sentences that describe your solution and provide a code snippet/block that shows your solution. Example:
+**Problem:** Event listeners for the database are managed by the OS and they outlive the application which is useful 
+for notifications, however, our app required real time data for status changes (location or profile picture), but 
+they were not required while the application was not being used. The problem was solved by removing the event listener 
+using the OnDestroy method. This solution was also useful for the players waiting for an invitation, since the event 
+listener will outlive the activity, if the same user invited the same person again, the integrity of the database would 
+be compromised as different event listeners would read it and update it. Hence, removing the event listener once the 
+activity is finished, fixed the issue.
 
-**Problem 1: We needed a method to calculate a Fibonacci sequence**
 
-A short description.
 ```
-// The method we implemented that solved our problem
-public static int fibonacci(int fibIndex) {
-    if (memoized.containsKey(fibIndex)) {
-        return memoized.get(fibIndex);
-    } else {
-        int answer = fibonacci(fibIndex - 1) + fibonacci(fibIndex - 2);
-        memoized.put(fibIndex, answer);
-        return answer;
+   //Remove the event listeners once the user logs out or the app is shutdown!
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        refUser.removeEventListener(userListener);
     }
-}
-
-// Source: Wikipedia Java [1]
 ```
+*Note: There is not reference for this solution, it was based on experience.*
+
+**Problem:** Allow the user to take pictures and send them without storing them locally. This was solved by taking the output 
+from the camera as a strings of bits, instead of a URI. Hence, we simply update the database with the strings the bits and the 
+image type.
+
+```
+    //Get the image as bitmap
+    Bitmap bm = (Bitmap) data.getExtras().get("data");
+    ByteArrayOutputStream st = new ByteArrayOutputStream();
+    
+    //Compress the image into bit string
+    bm.compress(Bitmap.CompressFormat.JPEG, 100, st);
+    byte[] imageByte = st.toByteArray();
+    
+    //save the image
+    saveImage(null, imageByte);
+```
+*Note: There is not reference for this solution, it was based on experience.*
+
 
 ## Feature Section
 
@@ -125,11 +144,17 @@ allow for all bonus functionalities to be readily addressed and completed.
 
 ## Contributions
 
-Philbert Adam - Created and implemented the artificial intelligence scripts for single player mode; added more realistic feedback (false 3D dice roll, sound)
-Sung Won Bhyun - Developed the core game engine and mechanics; ensured interface for user experience playing the game synthesized with the overall application layout and design
-Eric Lee - Designed user interface and activity layouts; refactored pages on app to maintain consistent adherence to Nielsen’s heuristic goals
-Seyd Lopez - Established user accounts and data management with Firebase; set up camera integration functionalities and user interaction features such as the messaging system, profile update, messaging multimedia files,GPS location system, game invitation, login and logout.
-Eric Nguyen - Managed project specifications and Git repository; handled merging of application modules and documentation of project development
+**Philbert Adam** - Created and implemented the artificial intelligence scripts for single player mode; added more realistic feedback 
+(false 3D dice roll, sound)  
+**Sung Won Bhyun** - Developed the core game engine and mechanics; ensured interface for user experience playing the game synthesized 
+with the overall application layout and design  
+**Eric Lee** - Designed user interface and activity layouts; refactored pages on app to maintain consistent adherence to Nielsen’s 
+heuristic goals  
+**Seyd Lopez** - Established user accounts and data management with Firebase; set up camera integration functionalities and user 
+interaction features such as the messaging system, profile update, messaging multimedia files,GPS location system, game invitation, 
+login and logout.  
+**Eric Nguyen** - Managed project specifications and Git repository; handled merging of application modules and documentation of 
+project development
 
 
 ## Sources
