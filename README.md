@@ -6,18 +6,44 @@ Eric Lee - B00719123
 Seyd Lopez - B00751312
 Eric Nguyen - B00573038
 
-Git repository located at URL: 
+Git repository located at URL: https://git.cs.dal.ca/enguyen/csci4176-group-project.git
 
 # Project Summary
-One paragraph to describe your project. Your description should include the project concept and key features implemented.
+
+Mobile Liar’s Dice is a digital application that adapts the Liar’s Dice game onto a mobile device platform 
+as well as incorporates features and functionalities native to mobile devices to further enhance user 
+experiences while playing the game. The application was designed with the intention of making use of camera 
+functionalities, GPS tracking, and online connectivity. These functionalities were implemented ultimately 
+with the intention of incorporating such device features in a way that would enhance the gameplay experience 
+of the primary game element of Mobile Liar’s Dice.
+
 
 ## Libraries
-Provide a list of **ALL** the libraries you used for your project. Example:
 
-**google-gson:** Gson is a Java library that can be used to convert Java Objects into their JSON representation. It can also be used to convert a JSON string to an equivalent Java object. Source [here](https://github.com/google/gson)
+com.google.firebase:firebase-core:16.0.7:  Firebase library required to connect to Firebase
+com.google.firebase:firebase-auth:16.1.0: Firebase authentication library required to sign up, signin and signout. This library was used to check on the state of the user.
+com.google.firebase:firebase-database:16.1.0: Firebase library required for update, delete and update the Non-SQL database. 
+com.google.firebase:firebase-storage:16.1.0: Firebase library to store multimedia files such as images.
+com.android.support:recyclerview-v7:28.0.0: Library used to display data in a list with less memory.
+de.hdodenhof:circleimageview:3.0.0: Library used to display images as circles.
+com.squareup.picasso:picasso:2.71828: Library used to load stored image via URL
+
 
 ## Installation Notes
-Installation instructions for markers.
+
+The user accounts for Mobile Liar’s Dice are built on Firebase, which is a service host that facilitates quick 
+and simple data management. The database that was used for the user account management element of Mobile Liar’s 
+Dice can be accessed at firebase.google.com using the following credentials:
+
+Email: mobilecompproject2019@gmail.com
+Password: MobileComp@2
+
+Access to this database will enable developers to view or modify user account information. However, this should 
+only be done on rare occasions, as it is more effective to modify a user’s own account information through their 
+settings within the Mobile Liar’s Dice app itself.
+
+New users should register and login before using the application using the login page of the application. 
+
 
 ## Code Examples
 You will encounter roadblocks and problems while developing your project. Share 2-3 'problems' that your team solved while developing your project. Write a few sentences that describe your solution and provide a code snippet/block that shows your solution. Example:
@@ -41,33 +67,75 @@ public static int fibonacci(int fibIndex) {
 ```
 
 ## Feature Section
-List all the main features of your application with a brief description of each feature.
+
+As mentioned before, the primary features of Mobile Liar’s Dice were built around three primary mobile device 
+features: built-in cameras, GPS location tracking, and the availability of online connectivity. Use of the 
+camera was incorporated through personalizable user account settings such as profile pictures and the option 
+to send photos via the chat messaging system; GPS tracking was incorporated into the location tracking of 
+other users with accounts on the application; and connectivity was utilized for establishing game sessions 
+between players as well as the chat messaging system. 
+
+In addition to the central feature designs, Mobile Liar’s Dice also makes use of artificial intelligence scripts 
+for calculating probabilities during single-player mode. This inclusion was to ensure that users interacting with 
+our app without the ability to access network connectivity of GPS tracking on their devices would also be able to 
+enjoy an engaging user experience.
+
 
 ## Final Project Status
-Write a description of the final status of the project. Did you achieve all your goals? What would be the next step for this project (if it were to continue)?
+
+The final iteration of Mobile Liar’s Dice as of the completion of this document is a working application that has 
+all of the minimum and expected functionalities we determined for its deliverability. The minimum requirements were 
+determined as functions absolutely necessary for allowing users to be able to interact with the application through 
+their mobile devices while also incorporating the desired mobile device capabilities. The expected functionalities 
+were determined by any functionalities that would streamline all minimum functionalities by enabling greater 
+interactive capabilities. Bonus functionalities were determined as those that would further enhance user experiences 
+with the application’s fundamental design.
+
+Due to the time constraints of the project as well as the emergence of additional resource requirements for the 
+minimum and expected functionalities we had already committed to, we were not able to implement all of the bonus 
+features that we listed. However, many of the bonus functionalities we identified depended on the completion of the 
+minimum or expected functionalities that we had completed, which means that future works for this application would 
+allow for all bonus functionalities to be readily addressed and completed.
 
 #### Minimum Functionality
-- Feature 1 name (Completed)
-- Feature 2 name (Partially Completed)
-- Feature 3 (Not Implemented)
+- User has their own hand of dice (Completed)
+- User can view and login with their own profile (Completed)
+- User can set a personal profile picture with a camera (Completed)
+- Application utilizes GPS to locate and list other nearby players (Completed)
+- User can view rules of the game (Completed)
+- User can play and interact with a game session (Completed)
 
 #### Expected Functionality
-- Feature 1 name (Completed)
-- Feature 2 name (Partially Completed)
-- Feature 3 (Not Implemented)
+- User can play with other users (Completed)
+- User can add other players to their friend’s list (Partially Completed)
+- User can chat with other players (Completed)
+- User can delete chat sessions (Completed)
+- User can modify their profile picture using local storage on their mobile device (Completed)
 
 #### Bonus Functionality
-- Feature 1 name (Completed)
-- Feature 2 name (Partially Completed)
-- Feature 3 (Not Implemented)
+- User can roll the dice by shaking his/her phone (Partially Completed)
+- User can see a 3D dice rolling (Partially Completed; only “false” 3D)
+- User can chat during the gaming session (Completed)
+- User can send pictures and take pictures during the chatting session (Completed)
+- The application implements a balance AI for single player mode (Partially Completed)
+- User can see a the global ranking from all the users (Not Implemented)
+- User can select a thematic user interface layout (Not implemented)
+- User can choose between single player and multiplayer (Completed)
+
+
+## Contributions
+
+Philbert Adam - Created and implemented the artificial intelligence scripts for single player mode; added more realistic feedback (false 3D dice roll, sound)
+Sung Won Bhyun - Developed the core game engine and mechanics; ensured interface for user experience playing the game synthesized with the overall application layout and design
+Eric Lee - Designed user interface and activity layouts; refactored pages on app to maintain consistent adherence to Nielsen’s heuristic goals
+Seyd Lopez - Established user accounts and data management with Firebase; set up camera integration functionalities and user interaction features such as the messaging system, profile update, messaging multimedia files,GPS location system, game invitation, login and logout.
+Eric Nguyen - Managed project specifications and Git repository; handled merging of application modules and documentation of project development
+
 
 ## Sources
-What to include in your project sources:
-- Stock images
-- Design guides
-- Programming tutorials
-- Research material
-- Android libraries
-- Everything listed on the Dalhousie Plagiarism and Cheating pages(https://www.dal.ca/dept/university_secretariat/academic-integrity/plagiarism-cheating.html)
 
-[1] "Java (programming language)", En.wikipedia.org, 2018. [Online]. Available: https://en.wikipedia.org/wiki/Java_(programming_language).
+“Liar’s dice”, En.wikipedia.org, 2019. [Online]. Available:
+https://en.wikipedia.org/wiki/Liar%27s_dice
+
+“How to Play Liar’s Dice”, wikihow.com, 2019. [Online]. Available:
+https://www.wikihow.com/Play-Liar%27s-Dice
