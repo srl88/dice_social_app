@@ -1,5 +1,5 @@
 # Identification
-**Mobile Liar's Dice**  
+**Group Pascaline - Mobile Liar's Dice**  
 Philibert Adam - B00826597  
 Sung Won Bhyun - B00687631  
 Eric Lee - B00719123  
@@ -187,7 +187,7 @@ allow for all bonus functionalities to be readily addressed and completed.
 
 #### Bonus Functionality
 - User can roll the dice by shaking his/her phone (Partially Completed)
-- User can see a 3D dice rolling (Partially Completed; only “false” 3D)
+- User can see a 3D dice rolling (Partially Completed; only “false” 3D for single player mode only)
 - User can chat during the gaming session (Completed)
 - User can send pictures and take pictures during the chatting session (Completed)
 - The application implements a balance AI for single player mode (Partially Completed)
