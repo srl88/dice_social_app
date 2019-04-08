@@ -350,143 +350,82 @@ public class SingleHandGameActivity extends AppCompatActivity {
 
                                 if (roomSnapshot.getPlayer1_die1() != 0) {
                                     firstDiceImage.setVisibility(View.VISIBLE);
-                                    firstDiceImage.setImageResource(R.drawable.dice3droll);
                                     value = roomSnapshot.getPlayer1_die1();
-                                    //Pause to allow image to update
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
-                                            firstDiceImage.setImageResource(diceID);
-                                        }
-                                    }, 400);
+                                    diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
+                                    firstDiceImage.setImageResource(diceID);
                                 } else {
                                     firstDiceImage.setVisibility(View.INVISIBLE);
                                 }
                                 if (roomSnapshot.getPlayer1_die2() != 0) {
                                     secondDiceImage.setVisibility(View.VISIBLE);
-                                    secondDiceImage.setImageResource(R.drawable.dice3droll);
                                     value = roomSnapshot.getPlayer1_die2();
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
-                                            secondDiceImage.setImageResource(diceID);
-                                        }
-                                    }, 400);
+                                    diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
+                                    secondDiceImage.setImageResource(diceID);
                                 } else {
                                     secondDiceImage.setVisibility(View.INVISIBLE);
                                 }
                                 if (roomSnapshot.getPlayer1_die3() != 0) {
                                     thirdDiceImage.setVisibility(View.VISIBLE);
-                                    thirdDiceImage.setImageResource(R.drawable.dice3droll);
                                     value = roomSnapshot.getPlayer1_die3();
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
-                                            thirdDiceImage.setImageResource(diceID);
-                                        }
-                                    }, 400);
+                                    diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
+                                    thirdDiceImage.setImageResource(diceID);
                                 } else {
                                     thirdDiceImage.setVisibility(View.INVISIBLE);
                                 }
                                 if (roomSnapshot.getPlayer1_die4() != 0) {
                                     fourthDiceImage.setVisibility(View.VISIBLE);
-                                    fourthDiceImage.setImageResource(R.drawable.dice3droll);
                                     value = roomSnapshot.getPlayer1_die4();
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
-                                            fourthDiceImage.setImageResource(diceID);
-                                        }
-                                    }, 400);
+                                    diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
+                                    fourthDiceImage.setImageResource(diceID);
                                 } else {
                                     fourthDiceImage.setVisibility(View.INVISIBLE);
                                 }
                                 if (roomSnapshot.getPlayer1_die5() != 0) {
                                     fifthDiceImage.setVisibility(View.VISIBLE);
-                                    fifthDiceImage.setImageResource(R.drawable.dice3droll);
                                     value = roomSnapshot.getPlayer1_die5();
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
-                                            fifthDiceImage.setImageResource(diceID);
-                                        }
-                                    }, 400);
+                                    diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
+                                    fifthDiceImage.setImageResource(diceID);
                                 } else {
                                     fifthDiceImage.setVisibility(View.INVISIBLE);
                                 }
                             } else {
                                 if (roomSnapshot.getPlayer2_die1() != 0) {
                                     firstDiceImage.setVisibility(View.VISIBLE);
-                                    firstDiceImage.setImageResource(R.drawable.dice3droll);
                                     value = roomSnapshot.getPlayer2_die1();
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
-                                            firstDiceImage.setImageResource(diceID);
-                                        }
-                                    }, 400);
+                                    diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
+                                    firstDiceImage.setImageResource(diceID);
                                 } else {
                                     firstDiceImage.setVisibility(View.INVISIBLE);
                                 }
                                 if (roomSnapshot.getPlayer2_die2() != 0) {
                                     secondDiceImage.setVisibility(View.VISIBLE);
-                                    secondDiceImage.setImageResource(R.drawable.dice3droll);
                                     value = roomSnapshot.getPlayer2_die2();
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
-                                            secondDiceImage.setImageResource(diceID);
-                                        }
-                                    }, 400);
+                                    diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
+                                    secondDiceImage.setImageResource(diceID);
                                 } else {
                                     secondDiceImage.setVisibility(View.INVISIBLE);
                                 }
                                 if (roomSnapshot.getPlayer2_die3() != 0) {
                                     thirdDiceImage.setVisibility(View.VISIBLE);
-                                    thirdDiceImage.setImageResource(R.drawable.dice3droll);
                                     value = roomSnapshot.getPlayer2_die3();
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
-                                            thirdDiceImage.setImageResource(diceID);
-                                        }
-                                    }, 400);
+                                    diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
+                                    thirdDiceImage.setImageResource(diceID);
                                 } else {
                                     thirdDiceImage.setVisibility(View.INVISIBLE);
                                 }
                                 if (roomSnapshot.getPlayer2_die4() != 0) {
                                     fourthDiceImage.setVisibility(View.VISIBLE);
-                                    fourthDiceImage.setImageResource(R.drawable.dice3droll);
                                     value = roomSnapshot.getPlayer2_die4();
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
-                                            fourthDiceImage.setImageResource(diceID);
-                                        }
-                                    }, 400);
+                                    diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
+                                    fourthDiceImage.setImageResource(diceID);
                                 } else {
                                     fourthDiceImage.setVisibility(View.INVISIBLE);
                                 }
                                 if (roomSnapshot.getPlayer2_die5() != 0) {
                                     fifthDiceImage.setVisibility(View.VISIBLE);
-                                    fifthDiceImage.setImageResource(R.drawable.dice3droll);
                                     value = roomSnapshot.getPlayer2_die5();
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
-                                            fifthDiceImage.setImageResource(diceID);
-                                        }
-                                    }, 400);
+                                    diceID = getResources().getIdentifier("face" + value, "drawable", getPackageName());
+                                    fifthDiceImage.setImageResource(diceID);
                                 } else {
                                     fifthDiceImage.setVisibility(View.INVISIBLE);
                                 }
